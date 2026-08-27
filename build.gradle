@@ -1,0 +1,86 @@
+plugins {
+    id 'java'
+    id 'antlr'
+    id 'java-gradle-plugin'
+    id 'jacoco'
+    id 'name.jurgenei.gradle.antlr'
+}
+
+group = 'name.jurgenei.gradle'
+version = '0.1.0'
+
+gradlePlugin {
+    plugins {
+        sasGrammar {
+            id = 'name.jurgenei.gradle.antlr.sas'
+            implementationClass = 'name.jurgenei.gradle.antlr.SasGrammarPlugin'
+            displayName = 'Gradle ANTLR SAS Plugin'
+            description = 'Proof-of-concept SAS macro expansion and XML AST generation plugin.'
+            tags.set(['antlr', 'sas', 'xml', 'ast', 'macro'])
+        }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+}
+
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    mavenLocal()
+}
+
+dependencies {
+    implementation 'name.jurgenei.gradle:gradle-antlr-plugin:0.1.2'
+    antlr 'org.antlr:antlr4:4.13.2'
+    implementation 'org.antlr:antlr4-runtime:4.13.2'
+
+    testImplementation gradleTestKit()
+    testImplementation 'junit:junit:4.13.2'
+}
+
+generateGrammarSource {
+    arguments += ['-listener', '-no-visitor']
+}
+
+sourceSets {
+    main {
+        antlr {
+            srcDirs = ['src/main/antlr/name/jurgenei/parsers']
+            include 'Sas.g4'
+        }
+        resources {
+            srcDir 'src/main/antlr'
+            include '**/*.g4'
+        }
+    }
+}
+
+tasks.named('compileJava') {
+    dependsOn tasks.named('generateGrammarSource')
+}
+
+tasks.named('test') {
+    useJUnit()
+}
+
+jacoco {
+    toolVersion = '0.8.12'
+}
+
+tasks.named('jacocoTestReport') {
+    dependsOn tasks.named('test')
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+
+tasks.named('check') {
+    dependsOn tasks.named('jacocoTestReport')
+}
+

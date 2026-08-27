@@ -1,0 +1,12 @@
+pluginManagement {
+    includeBuild("../gradle-antlr-plugin")
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+    }
+}
+
+includeBuild("../gradle-antlr-plugin")
+
+rootProject.name = 'gradle-antlr-sas-plugin'
+
