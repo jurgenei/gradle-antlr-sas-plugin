@@ -5,10 +5,34 @@
 1. `SasMacroGradleTask` (`sasMacro`) expands a focused subset of SAS macros.
 2. `XmlAstSasGradleTask` (`sasXmlAst`) converts expanded SAS into XML AST using ANTLR.
 
+The repository also provides an independent CASL module:
+
+- `XmlAstCaslGradleTask` (`caslXmlAst`) converts CASL sources to XML AST.
+- `CaslSemanticExtractGradleTask` (`caslSemantic`) converts CASL XML AST into normalized semantic JSON.
+- `caslPipeline` runs CASL conversion pipeline wrapper.
+
+The repository also provides an independent DS2 module:
+
+- `XmlAstDs2GradleTask` (`ds2XmlAst`) converts DS2 sources to XML AST.
+- `Ds2SemanticExtractGradleTask` (`ds2Semantic`) extracts DS2 semantic JSON summaries.
+- `ds2Pipeline` runs DS2 XML AST + semantic extraction pipeline.
+
 Pipeline:
 
 ```text
 SasProgramFile -> sasMacro -> sasXmlAst -> XML AST
+```
+
+CASL pipeline:
+
+```text
+CaslProgramFile -> caslXmlAst -> caslSemantic -> XML AST + semantic JSON
+```
+
+DS2 pipeline:
+
+```text
+Ds2ProgramFile -> ds2XmlAst -> ds2Semantic -> XML AST + semantic JSON
 ```
 
 ## Current Scope
@@ -19,14 +43,23 @@ Implemented in this proof of concept:
 - Macro processor architecture (`SasMacroProcessor` + `SasMacroGradleTask`)
 - Minimal DATA step grammar support
 - Minimal PROC SQL grammar support
+- Independent CASL module and grammar slice
+- Independent FEDSQL grammar module for `fedSql.execDirect` payload validation
+- Independent DS2 module and grammar slice
 - XML AST generation via `XmlAstGradleTask` base task
 - Automated regression framework using fixture-driven Gradle functional tests
 
 Not implemented yet:
 
 - Full SAS language coverage
-- Full macro language (`%macro/%mend`, macro functions, quoting functions)
-- CASL/FEDSQL modules
+- Full macro language (parameters, macro functions, quoting functions)
+- Full CASL action language and FEDSQL modules
+
+## Plugin IDs
+
+- Traditional SAS: `name.jurgenei.gradle.antlr.sas`
+- CASL: `name.jurgenei.gradle.antlr.casl`
+- DS2: `name.jurgenei.gradle.antlr.ds2`
 
 ## Install (Local Development)
 
@@ -47,6 +80,12 @@ plugins {
 - `sasMacro`: expands `%let` variables and `&var` / `&var.` references
 - `sasXmlAst`: parses expanded files with `name.jurgenei.parsers.SasLexer` + `name.jurgenei.parsers.SasParser`
 - `sasPipeline`: convenience wrapper running both stages
+- `caslXmlAst`: converts CASL files to XML AST
+- `caslSemantic`: extracts normalized JSON IR from CASL XML AST output
+- `caslPipeline`: convenience wrapper running CASL XML AST + semantic extraction stages
+- `ds2XmlAst`: converts DS2 files to XML AST
+- `ds2Semantic`: extracts DS2 semantic JSON summaries
+- `ds2Pipeline`: convenience wrapper running DS2 XML AST + semantic extraction stages
 
 Default conventions:
 
@@ -55,6 +94,16 @@ Default conventions:
 - `sasXmlAst.sourceDirectory = build/sas/macro` (wired from `sasMacro` output)
 - `sasXmlAst.destinationDirectory = build/sas/xmlast`
 - `sasXmlAst.startRule = program`
+- `caslXmlAst.sourceDirectory = src/main/casl`
+- `caslXmlAst.destinationDirectory = build/casl/xmlast`
+- `caslXmlAst.startRule = program`
+- `caslSemantic.sourceDirectory = build/casl/xmlast`
+- `caslSemantic.destinationDirectory = build/casl/semantic`
+- `ds2XmlAst.sourceDirectory = src/main/ds2`
+- `ds2XmlAst.destinationDirectory = build/ds2/xmlast`
+- `ds2XmlAst.startRule = program`
+- `ds2Semantic.sourceDirectory = src/main/ds2`
+- `ds2Semantic.destinationDirectory = build/ds2/semantic`
 
 ## Grammar Coverage (POC)
 
@@ -75,6 +124,26 @@ PROC SQL:
 - `left|right|inner join ... on ...` (POC slice)
 - boolean predicates with `and` / `or`
 
+CASL:
+
+- assignment (`x = 1;`)
+- action calls (`simple.summary / table={name='cars'};`)
+- action-set slices: `table.loadTable`, `fedSql.execDirect`
+- arrays and objects (`[1,2]`, `{name='cars'}`)
+- conditional statements (`if x > 1 then run;`)
+
+DS2:
+
+- `proc ds2; ... run; quit;`
+- `data <name>; ... enddata;`
+- `package <name>; ... endpackage;`
+- `thread <name>; ... endthread;`
+- `method <name>(); ... endmethod;`
+- typed method params (`method m(varchar name);`)
+- `set from <source>;`
+- declaration slices: `dcl`, `declare`
+- assignment and basic method-call statements
+
 ## Macro Expansion Coverage (POC)
 
 Supported:
@@ -85,6 +154,21 @@ Supported:
 - references: `&name` and `&name.`
 - predefined Gradle-supplied macros (`sasMacro.predefinedMacros`)
 - unresolved macro reporting (`sasMacro.failOnUndefinedMacro`)
+
+## Shared Semantic Interfaces
+
+Both SAS and CASL modules expose shared semantic contracts for future normalization:
+
+- `name.jurgenei.gradle.antlr.semantic.LanguageModule`
+- `name.jurgenei.gradle.antlr.semantic.SemanticProgram`
+- module descriptors: `SasLanguageModule`, `CaslLanguageModule`
+
+`caslSemantic` uses AST-driven CASL parsing (not regex scanning) and emits FEDSQL metrics:
+
+- `fedSqlQueryCount`
+- `fedSqlParsedCount`
+- `fedSqlFailedCount`
+- `fedSqlErrors`
 
 ## Usage Example
 
@@ -118,6 +202,19 @@ Test layers:
 - Plugin unit tests for registration, defaults, and task chaining
 - Functional tests for end-to-end pipeline execution
 - Fixture-driven regression harness in `src/test/resources/regression/*`
+- CASL fixture-driven regression harness in `src/test/resources/regression-casl/*`
+- Includes: `case-basic`, `case-actions`, `case-actions-variants`, `case-fedsql-queries`, `case-mixed`
+- DS2 fixture-driven regression harness in `src/test/resources/regression-ds2/*`
+- Includes: `case-basic`, `case-method-run`, `case-declarations`
+
+DS2 semantic JSON now includes:
+
+- `methods`, `methodCount`
+- `declarations`, `declarationCount`
+- `callEdges`, `callEdgeCount`
+- `procDs2BlockCount`
+- `dataBlocks`, `packageBlocks`, `threadBlocks`
+- `setFromSources`
 - Includes baseline + extended grammar cases (`case-basic`, `case-extended`)
 
 Run full verification:
@@ -132,6 +229,6 @@ This module targets incremental delivery:
 
 1. Stable two-stage pipeline (`sasMacro` -> `sasXmlAst`)
 2. Expand grammar and macro features in test-backed slices
-3. Introduce independent CASL module later, reusing shared semantic interfaces
+3. Expand independent CASL module, reusing shared semantic interfaces
 
 CASL direction is intentionally separate from traditional SAS because syntax and execution model differ.

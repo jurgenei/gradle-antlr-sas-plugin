@@ -1,0 +1,9 @@
+proc ds2;
+data work.demo;
+  method run();
+    x = 1;
+  endmethod;
+enddata;
+run;
+quit;
+

@@ -1,0 +1,5 @@
+x = 1;
+simple.summary / table={name='cars'};
+table.loadTable / caslib='Public', path='cars.sashdat';
+if x > 0 then fedSql.execDirect / query='select id from cars';
+

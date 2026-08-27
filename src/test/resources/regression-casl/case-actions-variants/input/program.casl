@@ -1,0 +1,5 @@
+threshold = 7;
+TABLE . loadTable / path='one.sashdat', caslib='Public';
+fEdSqL.execDirect / query='select id from cars where id > 1';
+run;
+

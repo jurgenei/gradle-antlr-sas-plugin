@@ -18,6 +18,20 @@ gradlePlugin {
             description = 'Proof-of-concept SAS macro expansion and XML AST generation plugin.'
             tags.set(['antlr', 'sas', 'xml', 'ast', 'macro'])
         }
+        caslGrammar {
+            id = 'name.jurgenei.gradle.antlr.casl'
+            implementationClass = 'name.jurgenei.gradle.antlr.CaslGrammarPlugin'
+            displayName = 'Gradle ANTLR CASL Plugin'
+            description = 'Proof-of-concept CASL XML AST generation plugin.'
+            tags.set(['antlr', 'casl', 'xml', 'ast'])
+        }
+        ds2Grammar {
+            id = 'name.jurgenei.gradle.antlr.ds2'
+            implementationClass = 'name.jurgenei.gradle.antlr.Ds2GrammarPlugin'
+            displayName = 'Gradle ANTLR DS2 Plugin'
+            description = 'Proof-of-concept DS2 XML AST and semantic extraction plugin.'
+            tags.set(['antlr', 'ds2', 'xml', 'ast'])
+        }
     }
 }
 
@@ -52,6 +66,9 @@ sourceSets {
         antlr {
             srcDirs = ['src/main/antlr/name/jurgenei/parsers']
             include 'Sas.g4'
+            include 'Casl.g4'
+            include 'FedSql.g4'
+            include 'Ds2.g4'
         }
         resources {
             srcDir 'src/main/antlr'
