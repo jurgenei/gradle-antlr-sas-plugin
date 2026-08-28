@@ -62,7 +62,7 @@ public class CaslGrammarPluginFunctionalTest {
                 """
                 plugins {
                     id 'java'
-                    id 'name.jurgenei.gradle.antlr.casl'
+                    id 'name.jurgenei.gradle.antlr.sas'
                 }
                 """,
                 StandardCharsets.UTF_8);

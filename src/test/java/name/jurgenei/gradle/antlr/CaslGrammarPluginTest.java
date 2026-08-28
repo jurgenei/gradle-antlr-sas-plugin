@@ -17,7 +17,7 @@ public class CaslGrammarPluginTest {
         final Project project = ProjectBuilder.builder().build();
         project.getPluginManager().apply("java");
 
-        new CaslGrammarPlugin().apply(project);
+        new SasGrammarPlugin().apply(project);
 
         Assert.assertNotNull(project.getTasks().findByName("caslXmlAst"));
         Assert.assertNotNull(project.getTasks().findByName("caslSemantic"));
@@ -31,7 +31,7 @@ public class CaslGrammarPluginTest {
         final Project project = ProjectBuilder.builder().build();
         project.getPluginManager().apply("java");
 
-        new CaslGrammarPlugin().apply(project);
+        new SasGrammarPlugin().apply(project);
 
         final XmlAstCaslGradleTask task = XmlAstCaslGradleTask.class.cast(project.getTasks().getByName("caslXmlAst"));
         Assert.assertEquals("casl", task.getGrammar().get());

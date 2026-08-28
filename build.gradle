@@ -18,20 +18,6 @@ gradlePlugin {
             description = 'Proof-of-concept SAS macro expansion and XML AST generation plugin.'
             tags.set(['antlr', 'sas', 'xml', 'ast', 'macro'])
         }
-        caslGrammar {
-            id = 'name.jurgenei.gradle.antlr.casl'
-            implementationClass = 'name.jurgenei.gradle.antlr.CaslGrammarPlugin'
-            displayName = 'Gradle ANTLR CASL Plugin'
-            description = 'Proof-of-concept CASL XML AST generation plugin.'
-            tags.set(['antlr', 'casl', 'xml', 'ast'])
-        }
-        ds2Grammar {
-            id = 'name.jurgenei.gradle.antlr.ds2'
-            implementationClass = 'name.jurgenei.gradle.antlr.Ds2GrammarPlugin'
-            displayName = 'Gradle ANTLR DS2 Plugin'
-            description = 'Proof-of-concept DS2 XML AST and semantic extraction plugin.'
-            tags.set(['antlr', 'ds2', 'xml', 'ast'])
-        }
     }
 }
 
@@ -95,6 +81,35 @@ tasks.named('jacocoTestReport') {
         xml.required = true
         html.required = true
     }
+}
+
+tasks.register('verifySampleSas', Exec) {
+    group = 'verification'
+    description = 'Runs SAS sample macro and XML AST tasks.'
+    workingDir = projectDir
+    commandLine './gradlew', '-p', 'samples/sas', 'clean', 'sasMacro', 'sasXmlAst'
+}
+
+tasks.register('verifySampleCasl', Exec) {
+    group = 'verification'
+    description = 'Runs CASL sample XML AST and semantic tasks.'
+    workingDir = projectDir
+    commandLine './gradlew', '-p', 'samples/casl', 'clean', 'caslXmlAst', 'caslSemantic'
+}
+
+tasks.register('verifySampleDs2', Exec) {
+    group = 'verification'
+    description = 'Runs DS2 sample XML AST and semantic tasks.'
+    workingDir = projectDir
+    commandLine './gradlew', '-p', 'samples/ds2', 'clean', 'ds2XmlAst', 'ds2Semantic'
+}
+
+tasks.register('verifySamples') {
+    group = 'verification'
+    description = 'Runs all sample verification task chains.'
+    dependsOn tasks.named('verifySampleSas')
+    dependsOn tasks.named('verifySampleCasl')
+    dependsOn tasks.named('verifySampleDs2')
 }
 
 tasks.named('check') {

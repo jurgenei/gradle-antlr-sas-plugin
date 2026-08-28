@@ -1,0 +1,14 @@
+proc ds2;
+data work.demo;
+  dcl int x;
+  set from work.input;
+  method run();
+    helper();
+  endmethod;
+  method helper(varchar name);
+    x = 1;
+  endmethod;
+enddata;
+run;
+quit;
+

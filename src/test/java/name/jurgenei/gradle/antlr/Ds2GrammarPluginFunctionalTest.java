@@ -63,7 +63,7 @@ public class Ds2GrammarPluginFunctionalTest {
                 """
                 plugins {
                     id 'java'
-                    id 'name.jurgenei.gradle.antlr.ds2'
+                    id 'name.jurgenei.gradle.antlr.sas'
                 }
                 """,
                 StandardCharsets.UTF_8);

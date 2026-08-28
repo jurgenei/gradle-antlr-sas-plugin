@@ -45,7 +45,7 @@ public class CaslRegressionFunctionalTest {
         Files.writeString(projectDir.toPath().resolve("build.gradle"), """
                 plugins {
                     id 'java'
-                    id 'name.jurgenei.gradle.antlr.casl'
+                    id 'name.jurgenei.gradle.antlr.sas'
                 }
                 """, StandardCharsets.UTF_8);
 

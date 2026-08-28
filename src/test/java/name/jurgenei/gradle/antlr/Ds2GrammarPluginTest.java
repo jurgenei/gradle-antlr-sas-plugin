@@ -17,7 +17,7 @@ public class Ds2GrammarPluginTest {
         final Project project = ProjectBuilder.builder().build();
         project.getPluginManager().apply("java");
 
-        new Ds2GrammarPlugin().apply(project);
+        new SasGrammarPlugin().apply(project);
 
         Assert.assertNotNull(project.getTasks().findByName("ds2XmlAst"));
         Assert.assertNotNull(project.getTasks().findByName("ds2Semantic"));
@@ -31,7 +31,7 @@ public class Ds2GrammarPluginTest {
         final Project project = ProjectBuilder.builder().build();
         project.getPluginManager().apply("java");
 
-        new Ds2GrammarPlugin().apply(project);
+        new SasGrammarPlugin().apply(project);
 
         final XmlAstDs2GradleTask xmlTask = XmlAstDs2GradleTask.class.cast(project.getTasks().getByName("ds2XmlAst"));
         Assert.assertEquals("ds2", xmlTask.getGrammar().get());

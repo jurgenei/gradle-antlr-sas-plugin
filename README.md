@@ -1,65 +1,14 @@
 # Gradle ANTLR SAS Plugin (Proof of Concept)
 
-`gradle-antlr-sas-plugin` provides two chained Gradle tasks for SAS parsing experiments:
+`gradle-antlr-sas-plugin` exposes one plugin id:
 
-1. `SasMacroGradleTask` (`sasMacro`) expands a focused subset of SAS macros.
-2. `XmlAstSasGradleTask` (`sasXmlAst`) converts expanded SAS into XML AST using ANTLR.
+- `name.jurgenei.gradle.antlr.sas`
 
-The repository also provides an independent CASL module:
+One plugin registers three pipelines:
 
-- `XmlAstCaslGradleTask` (`caslXmlAst`) converts CASL sources to XML AST.
-- `CaslSemanticExtractGradleTask` (`caslSemantic`) converts CASL XML AST into normalized semantic JSON.
-- `caslPipeline` runs CASL conversion pipeline wrapper.
-
-The repository also provides an independent DS2 module:
-
-- `XmlAstDs2GradleTask` (`ds2XmlAst`) converts DS2 sources to XML AST.
-- `Ds2SemanticExtractGradleTask` (`ds2Semantic`) extracts DS2 semantic JSON summaries.
-- `ds2Pipeline` runs DS2 XML AST + semantic extraction pipeline.
-
-Pipeline:
-
-```text
-SasProgramFile -> sasMacro -> sasXmlAst -> XML AST
-```
-
-CASL pipeline:
-
-```text
-CaslProgramFile -> caslXmlAst -> caslSemantic -> XML AST + semantic JSON
-```
-
-DS2 pipeline:
-
-```text
-Ds2ProgramFile -> ds2XmlAst -> ds2Semantic -> XML AST + semantic JSON
-```
-
-## Current Scope
-
-Implemented in this proof of concept:
-
-- Plugin foundation and task registration (`SasGrammarPlugin`)
-- Macro processor architecture (`SasMacroProcessor` + `SasMacroGradleTask`)
-- Minimal DATA step grammar support
-- Minimal PROC SQL grammar support
-- Independent CASL module and grammar slice
-- Independent FEDSQL grammar module for `fedSql.execDirect` payload validation
-- Independent DS2 module and grammar slice
-- XML AST generation via `XmlAstGradleTask` base task
-- Automated regression framework using fixture-driven Gradle functional tests
-
-Not implemented yet:
-
-- Full SAS language coverage
-- Full macro language (parameters, macro functions, quoting functions)
-- Full CASL action language and FEDSQL modules
-
-## Plugin IDs
-
-- Traditional SAS: `name.jurgenei.gradle.antlr.sas`
-- CASL: `name.jurgenei.gradle.antlr.casl`
-- DS2: `name.jurgenei.gradle.antlr.ds2`
+- SAS: `sasMacro` -> `sasXmlAst` -> `sasPipeline`
+- CASL: `caslXmlAst` -> `caslSemantic` -> `caslPipeline`
+- DS2: `ds2XmlAst` -> `ds2Semantic` -> `ds2Pipeline`
 
 ## Install (Local Development)
 
@@ -67,274 +16,96 @@ Not implemented yet:
 ./gradlew -p gradle-antlr-sas-plugin clean test
 ```
 
-Plugin id:
+## Plugin Usage
 
 ```groovy
 plugins {
-	id 'name.jurgenei.gradle.antlr.sas'
+    id 'java'
+    id 'name.jurgenei.gradle.antlr.sas'
 }
 ```
 
 ## Tasks
 
 - `sasMacro`: expands `%let` variables and `&var` / `&var.` references
-- `sasXmlAst`: parses expanded files with `name.jurgenei.parsers.SasLexer` + `name.jurgenei.parsers.SasParser`
-- `sasPipeline`: convenience wrapper running both stages
-- `caslXmlAst`: converts CASL files to XML AST
-- `caslSemantic`: extracts normalized JSON IR from CASL XML AST output
-- `caslPipeline`: convenience wrapper running CASL XML AST + semantic extraction stages
-- `ds2XmlAst`: converts DS2 files to XML AST
+- `sasXmlAst`: parses expanded SAS and writes XML AST
+- `sasPipeline`: runs SAS macro + XML AST stages
+- `caslXmlAst`: parses CASL sources and writes XML AST
+- `caslSemantic`: extracts normalized semantic JSON from CASL pipeline
+- `caslPipeline`: runs CASL XML AST + semantic stages
+- `ds2XmlAst`: parses DS2 sources and writes XML AST
 - `ds2Semantic`: extracts DS2 semantic JSON summaries
-- `ds2Pipeline`: convenience wrapper running DS2 XML AST + semantic extraction stages
+- `ds2Pipeline`: runs DS2 XML AST + semantic stages
 
-Default conventions:
+## Default Conventions
 
 - `sasMacro.sourceDirectory = src/main/sas`
 - `sasMacro.destinationDirectory = build/sas/macro`
-- `sasXmlAst.sourceDirectory = build/sas/macro` (wired from `sasMacro` output)
+- `sasXmlAst.sourceDirectory = build/sas/macro`
 - `sasXmlAst.destinationDirectory = build/sas/xmlast`
-- `sasXmlAst.startRule = program`
 - `caslXmlAst.sourceDirectory = src/main/casl`
 - `caslXmlAst.destinationDirectory = build/casl/xmlast`
-- `caslXmlAst.startRule = program`
 - `caslSemantic.sourceDirectory = build/casl/xmlast`
 - `caslSemantic.destinationDirectory = build/casl/semantic`
 - `ds2XmlAst.sourceDirectory = src/main/ds2`
 - `ds2XmlAst.destinationDirectory = build/ds2/xmlast`
-- `ds2XmlAst.startRule = program`
 - `ds2Semantic.sourceDirectory = src/main/ds2`
 - `ds2Semantic.destinationDirectory = build/ds2/semantic`
 
-## Grammar Coverage (POC)
-
-DATA step:
-
-- `data <name>; ... run;`
-- dataset options in header (`keep=...`, `drop=...`)
-- `set <name>;`
-- assignment statements with arithmetic and grouping (`x = (a * b) - c;`)
-- `format` statements (POC slice)
-- `output;`
-
-PROC SQL:
-
-- `proc sql; ... quit;`
-- `create table <name> as select ... from ... ;`
-- `select <cols|*> from <name> [where <expr>]`
-- `left|right|inner join ... on ...` (POC slice)
-- boolean predicates with `and` / `or`
-
-CASL:
-
-- assignment (`x = 1;`)
-- action calls (`simple.summary / table={name='cars'};`)
-- action-set slices: `table.loadTable`, `fedSql.execDirect`
-- arrays and objects (`[1,2]`, `{name='cars'}`)
-- conditional statements (`if x > 1 then run;`)
-
-DS2:
-
-- `proc ds2; ... run; quit;`
-- `data <name>; ... enddata;`
-- `package <name>; ... endpackage;`
-- `thread <name>; ... endthread;`
-- `method <name>(); ... endmethod;`
-- typed method params (`method m(varchar name);`)
-- `set from <source>;`
-- declaration slices: `dcl`, `declare`
-- assignment and basic method-call statements
-
-## Macro Expansion Coverage (POC)
-
-Supported:
-
-- `%let name = value;`
-- `%macro name; ... %mend;`
-- `%name;` macro invocation
-- references: `&name` and `&name.`
-- predefined Gradle-supplied macros (`sasMacro.predefinedMacros`)
-- unresolved macro reporting (`sasMacro.failOnUndefinedMacro`)
-
-## Shared Semantic Interfaces
-
-Both SAS and CASL modules expose shared semantic contracts for future normalization:
-
-- `name.jurgenei.gradle.antlr.semantic.LanguageModule`
-- `name.jurgenei.gradle.antlr.semantic.SemanticProgram`
-- module descriptors: `SasLanguageModule`, `CaslLanguageModule`
-
-`caslSemantic` uses AST-driven CASL parsing (not regex scanning) and emits FEDSQL metrics:
-
-- `fedSqlQueryCount`
-- `fedSqlParsedCount`
-- `fedSqlFailedCount`
-- `fedSqlErrors`
-
-## Usage Example
-
-```groovy
-plugins {
-	id 'java'
-	id 'name.jurgenei.gradle.antlr.sas'
-}
-
-tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
-	predefinedMacros.put('ENV', 'dev')
-}
-
-tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-	continueOnError.set(false)
-	failOnError.set(true)
-}
-```
-
-Run pipeline:
+## Quick Run
 
 ```bash
-./gradlew sasPipeline
+./gradlew -p gradle-antlr-sas-plugin sasPipeline
+./gradlew -p gradle-antlr-sas-plugin caslPipeline
+./gradlew -p gradle-antlr-sas-plugin ds2Pipeline
 ```
 
 ## Samples
 
-### Sample 1: SAS macro + AST chained with explicit directories
+Runnable samples live in `samples/`:
+
+- `samples/sas`
+- `samples/casl`
+- `samples/ds2`
+
+Each sample uses composite build in `settings.gradle`:
 
 ```groovy
-plugins {
-	id 'java'
-	id 'name.jurgenei.gradle.antlr.sas'
-}
-
-tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
-	// source directory (input)
-	sourceDirectory.set(layout.projectDirectory.dir('samples/sas/input'))
-	// target directory (expanded sas output)
-	destinationDirectory.set(layout.buildDirectory.dir('samples/sas/macro-expanded'))
-	predefinedMacros.put('ENV', 'dev')
-	failOnUndefinedMacro.set(true)
-}
-
-tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-	// chain: take output from macro task as source
-	dependsOn tasks.named('sasMacro')
-	sourceDirectory.set(tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask)
-			.flatMap { it.destinationDirectory })
-	// target directory (xml ast output)
-	destinationDirectory.set(layout.buildDirectory.dir('samples/sas/xmlast'))
-	targetExtension.set('.xml')
-	continueOnError.set(false)
-	failOnError.set(true)
+pluginManagement {
+    includeBuild('../..')
 }
 ```
 
-Run chained tasks:
+Run samples from `gradle-antlr-sas-plugin` directory:
 
 ```bash
-./gradlew sasMacro sasXmlAst
+./gradlew -p samples/sas sasPipeline
+./gradlew -p samples/casl caslPipeline
+./gradlew -p samples/ds2 ds2Pipeline
 ```
 
-### Sample 2: SAS pipeline task with custom source/target directories
+See `samples/README.md` for output locations.
 
-```groovy
-plugins {
-	id 'java'
-	id 'name.jurgenei.gradle.antlr.sas'
-}
+## Scope (POC)
 
-tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
-	sourceDirectory.set(layout.projectDirectory.dir('src/custom-sas'))
-	destinationDirectory.set(layout.buildDirectory.dir('generated/sas-macro'))
-}
+Implemented:
 
-tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-	destinationDirectory.set(layout.buildDirectory.dir('generated/sas-xmlast'))
-}
-```
+- Plugin and task registration in `SasGrammarPlugin`
+- SAS macro expansion subset (`%let`, `%macro`, `%mend`, `%name`, `&name`)
+- SAS XML AST generation via ANTLR
+- CASL XML AST + semantic extraction
+- DS2 XML AST + semantic extraction
+- Functional and regression test harnesses
 
-Run pipeline wrapper:
+Not implemented:
 
-```bash
-./gradlew sasPipeline
-```
+- Full SAS language coverage
+- Full macro language semantics
+- Full CASL action language
+- Full DS2 language coverage
 
-### Sample 3: CASL source/target directories
-
-```groovy
-plugins {
-	id 'java'
-	id 'name.jurgenei.gradle.antlr.casl'
-}
-
-tasks.named('caslXmlAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask) {
-	sourceDirectory.set(layout.projectDirectory.dir('samples/casl/input'))
-	destinationDirectory.set(layout.buildDirectory.dir('samples/casl/xmlast'))
-}
-
-tasks.named('caslSemantic', name.jurgenei.gradle.antlr.CaslSemanticExtractGradleTask) {
-	destinationDirectory.set(layout.buildDirectory.dir('samples/casl/semantic'))
-}
-```
-
-```bash
-./gradlew caslPipeline
-```
-
-### Sample 4: DS2 source/target directories
-
-```groovy
-plugins {
-	id 'java'
-	id 'name.jurgenei.gradle.antlr.ds2'
-}
-
-tasks.named('ds2XmlAst', name.jurgenei.gradle.antlr.XmlAstDs2GradleTask) {
-	sourceDirectory.set(layout.projectDirectory.dir('samples/ds2/input'))
-	destinationDirectory.set(layout.buildDirectory.dir('samples/ds2/xmlast'))
-}
-
-tasks.named('ds2Semantic', name.jurgenei.gradle.antlr.Ds2SemanticExtractGradleTask) {
-	destinationDirectory.set(layout.buildDirectory.dir('samples/ds2/semantic'))
-}
-```
-
-```bash
-./gradlew ds2Pipeline
-```
-
-## TDD and Regression Strategy
-
-Test layers:
-
-- Unit tests for macro processor behavior
-- Plugin unit tests for registration, defaults, and task chaining
-- Functional tests for end-to-end pipeline execution
-- Fixture-driven regression harness in `src/test/resources/regression/*`
-- CASL fixture-driven regression harness in `src/test/resources/regression-casl/*`
-- Includes: `case-basic`, `case-actions`, `case-actions-variants`, `case-fedsql-queries`, `case-mixed`
-- DS2 fixture-driven regression harness in `src/test/resources/regression-ds2/*`
-- Includes: `case-basic`, `case-method-run`, `case-declarations`
-
-DS2 semantic JSON now includes:
-
-- `methods`, `methodCount`
-- `declarations`, `declarationCount`
-- `callEdges`, `callEdgeCount`
-- `procDs2BlockCount`
-- `dataBlocks`, `packageBlocks`, `threadBlocks`
-- `setFromSources`
-- Includes baseline + extended grammar cases (`case-basic`, `case-extended`)
-
-Run full verification:
+## Verification
 
 ```bash
 ./gradlew -p gradle-antlr-sas-plugin clean test jacocoTestReport
 ```
-
-## Architecture Notes
-
-This module targets incremental delivery:
-
-1. Stable two-stage pipeline (`sasMacro` -> `sasXmlAst`)
-2. Expand grammar and macro features in test-backed slices
-3. Expand independent CASL module, reusing shared semantic interfaces
-
-CASL direction is intentionally separate from traditional SAS because syntax and execution model differ.

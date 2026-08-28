@@ -45,7 +45,7 @@ public class Ds2RegressionFunctionalTest {
         Files.writeString(projectDir.toPath().resolve("build.gradle"), """
                 plugins {
                     id 'java'
-                    id 'name.jurgenei.gradle.antlr.ds2'
+                    id 'name.jurgenei.gradle.antlr.sas'
                 }
                 """, StandardCharsets.UTF_8);
 
