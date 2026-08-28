@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'antlr'
     id 'java-gradle-plugin'
+    id 'com.gradle.plugin-publish' version '2.1.1'
     id 'jacoco'
     id 'name.jurgenei.gradle.antlr'
 }
@@ -11,6 +12,8 @@ version = '0.1.0'
 
 gradlePlugin {
     plugins {
+        website = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
+        vcsUrl = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
         sasGrammar {
             id = 'name.jurgenei.gradle.antlr.sas'
             implementationClass = 'name.jurgenei.gradle.antlr.SasGrammarPlugin'
@@ -43,6 +46,44 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 }
 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+
+            pom {
+                name = 'Gradle ANTLR SAS Plugin'
+                description = 'Gradle plugin for XML AST conversion of SAS sources'
+                url = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'jurgenei'
+                        name = 'Jurgen Hildebrand'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:https://github.com/jurgenei/gradle-antlr-sas-plugin.git'
+                    developerConnection = 'scm:git:ssh://git@github.com/jurgenei/gradle-antlr-sas-plugin.git'
+                    url = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
+                }
+            }
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
 generateGrammarSource {
     arguments += ['-listener', '-no-visitor']
 }
@@ -60,6 +101,12 @@ sourceSets {
             srcDir 'src/main/antlr'
             include '**/*.g4'
         }
+    }
+}
+
+tasks.named('javadoc', Javadoc) {
+    source = fileTree('src/main/java') {
+        include '**/*.java'
     }
 }
 
