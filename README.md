@@ -194,6 +194,112 @@ Run pipeline:
 ./gradlew sasPipeline
 ```
 
+## Samples
+
+### Sample 1: SAS macro + AST chained with explicit directories
+
+```groovy
+plugins {
+	id 'java'
+	id 'name.jurgenei.gradle.antlr.sas'
+}
+
+tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
+	// source directory (input)
+	sourceDirectory.set(layout.projectDirectory.dir('samples/sas/input'))
+	// target directory (expanded sas output)
+	destinationDirectory.set(layout.buildDirectory.dir('samples/sas/macro-expanded'))
+	predefinedMacros.put('ENV', 'dev')
+	failOnUndefinedMacro.set(true)
+}
+
+tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+	// chain: take output from macro task as source
+	dependsOn tasks.named('sasMacro')
+	sourceDirectory.set(tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask)
+			.flatMap { it.destinationDirectory })
+	// target directory (xml ast output)
+	destinationDirectory.set(layout.buildDirectory.dir('samples/sas/xmlast'))
+	targetExtension.set('.xml')
+	continueOnError.set(false)
+	failOnError.set(true)
+}
+```
+
+Run chained tasks:
+
+```bash
+./gradlew sasMacro sasXmlAst
+```
+
+### Sample 2: SAS pipeline task with custom source/target directories
+
+```groovy
+plugins {
+	id 'java'
+	id 'name.jurgenei.gradle.antlr.sas'
+}
+
+tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
+	sourceDirectory.set(layout.projectDirectory.dir('src/custom-sas'))
+	destinationDirectory.set(layout.buildDirectory.dir('generated/sas-macro'))
+}
+
+tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+	destinationDirectory.set(layout.buildDirectory.dir('generated/sas-xmlast'))
+}
+```
+
+Run pipeline wrapper:
+
+```bash
+./gradlew sasPipeline
+```
+
+### Sample 3: CASL source/target directories
+
+```groovy
+plugins {
+	id 'java'
+	id 'name.jurgenei.gradle.antlr.casl'
+}
+
+tasks.named('caslXmlAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask) {
+	sourceDirectory.set(layout.projectDirectory.dir('samples/casl/input'))
+	destinationDirectory.set(layout.buildDirectory.dir('samples/casl/xmlast'))
+}
+
+tasks.named('caslSemantic', name.jurgenei.gradle.antlr.CaslSemanticExtractGradleTask) {
+	destinationDirectory.set(layout.buildDirectory.dir('samples/casl/semantic'))
+}
+```
+
+```bash
+./gradlew caslPipeline
+```
+
+### Sample 4: DS2 source/target directories
+
+```groovy
+plugins {
+	id 'java'
+	id 'name.jurgenei.gradle.antlr.ds2'
+}
+
+tasks.named('ds2XmlAst', name.jurgenei.gradle.antlr.XmlAstDs2GradleTask) {
+	sourceDirectory.set(layout.projectDirectory.dir('samples/ds2/input'))
+	destinationDirectory.set(layout.buildDirectory.dir('samples/ds2/xmlast'))
+}
+
+tasks.named('ds2Semantic', name.jurgenei.gradle.antlr.Ds2SemanticExtractGradleTask) {
+	destinationDirectory.set(layout.buildDirectory.dir('samples/ds2/semantic'))
+}
+```
+
+```bash
+./gradlew ds2Pipeline
+```
+
 ## TDD and Regression Strategy
 
 Test layers:
