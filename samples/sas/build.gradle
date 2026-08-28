@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+    id 'name.jurgenei.gradle.antlr.sas'
+}
+
+tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
+    sourceDirectory.set(layout.projectDirectory.dir('src/main/sas'))
+    destinationDirectory.set(layout.buildDirectory.dir('output/sas/macro'))
+    predefinedMacros.put('TARGET', 'work.sales')
+}
+
+tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+    sourceDirectory.set(tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask)
+            .flatMap { it.destinationDirectory })
+    destinationDirectory.set(layout.buildDirectory.dir('output/sas/xmlast'))
+    targetExtension.set('.xml')
+}
+

@@ -22,8 +22,18 @@ public class SasGrammarPluginTest {
         Assert.assertNotNull(project.getTasks().findByName("sasMacro"));
         Assert.assertNotNull(project.getTasks().findByName("sasXmlAst"));
         Assert.assertNotNull(project.getTasks().findByName("sasPipeline"));
+        Assert.assertNotNull(project.getTasks().findByName("caslXmlAst"));
+        Assert.assertNotNull(project.getTasks().findByName("caslSemantic"));
+        Assert.assertNotNull(project.getTasks().findByName("caslPipeline"));
+        Assert.assertNotNull(project.getTasks().findByName("ds2XmlAst"));
+        Assert.assertNotNull(project.getTasks().findByName("ds2Semantic"));
+        Assert.assertNotNull(project.getTasks().findByName("ds2Pipeline"));
         SasMacroGradleTask.class.cast(project.getTasks().getByName("sasMacro"));
         XmlAstSasGradleTask.class.cast(project.getTasks().getByName("sasXmlAst"));
+        XmlAstCaslGradleTask.class.cast(project.getTasks().getByName("caslXmlAst"));
+        CaslSemanticExtractGradleTask.class.cast(project.getTasks().getByName("caslSemantic"));
+        XmlAstDs2GradleTask.class.cast(project.getTasks().getByName("ds2XmlAst"));
+        Ds2SemanticExtractGradleTask.class.cast(project.getTasks().getByName("ds2Semantic"));
     }
 
     @Test

@@ -1,32 +1,14 @@
 # Gradle ANTLR SAS Plugin (Proof of Concept)
 
-`gradle-antlr-sas-plugin` provides two chained Gradle tasks for SAS parsing experiments:
+`gradle-antlr-sas-plugin` exposes one plugin id:
 
-1. `SasMacroGradleTask` (`sasMacro`) expands a focused subset of SAS macros.
-2. `XmlAstSasGradleTask` (`sasXmlAst`) converts expanded SAS into XML AST using ANTLR.
+- `name.jurgenei.gradle.antlr.sas`
 
-Pipeline:
+One plugin registers three pipelines:
 
-```text
-SasProgramFile -> sasMacro -> sasXmlAst -> XML AST
-```
-
-## Current Scope
-
-Implemented in this proof of concept:
-
-- Plugin foundation and task registration (`SasGrammarPlugin`)
-- Macro processor architecture (`SasMacroProcessor` + `SasMacroGradleTask`)
-- Minimal DATA step grammar support
-- Minimal PROC SQL grammar support
-- XML AST generation via `XmlAstGradleTask` base task
-- Automated regression framework using fixture-driven Gradle functional tests
-
-Not implemented yet:
-
-- Full SAS language coverage
-- Full macro language (`%macro/%mend`, macro functions, quoting functions)
-- CASL/FEDSQL modules
+- SAS: `sasMacro` -> `sasXmlAst` -> `sasPipeline`
+- CASL: `caslXmlAst` -> `caslSemantic` -> `caslPipeline`
+- DS2: `ds2XmlAst` -> `ds2Semantic` -> `ds2Pipeline`
 
 ## Install (Local Development)
 
@@ -34,104 +16,96 @@ Not implemented yet:
 ./gradlew -p gradle-antlr-sas-plugin clean test
 ```
 
-Plugin id:
+## Plugin Usage
 
 ```groovy
 plugins {
-	id 'name.jurgenei.gradle.antlr.sas'
+    id 'java'
+    id 'name.jurgenei.gradle.antlr.sas'
 }
 ```
 
 ## Tasks
 
 - `sasMacro`: expands `%let` variables and `&var` / `&var.` references
-- `sasXmlAst`: parses expanded files with `name.jurgenei.parsers.SasLexer` + `name.jurgenei.parsers.SasParser`
-- `sasPipeline`: convenience wrapper running both stages
+- `sasXmlAst`: parses expanded SAS and writes XML AST
+- `sasPipeline`: runs SAS macro + XML AST stages
+- `caslXmlAst`: parses CASL sources and writes XML AST
+- `caslSemantic`: extracts normalized semantic JSON from CASL pipeline
+- `caslPipeline`: runs CASL XML AST + semantic stages
+- `ds2XmlAst`: parses DS2 sources and writes XML AST
+- `ds2Semantic`: extracts DS2 semantic JSON summaries
+- `ds2Pipeline`: runs DS2 XML AST + semantic stages
 
-Default conventions:
+## Default Conventions
 
 - `sasMacro.sourceDirectory = src/main/sas`
 - `sasMacro.destinationDirectory = build/sas/macro`
-- `sasXmlAst.sourceDirectory = build/sas/macro` (wired from `sasMacro` output)
+- `sasXmlAst.sourceDirectory = build/sas/macro`
 - `sasXmlAst.destinationDirectory = build/sas/xmlast`
-- `sasXmlAst.startRule = program`
+- `caslXmlAst.sourceDirectory = src/main/casl`
+- `caslXmlAst.destinationDirectory = build/casl/xmlast`
+- `caslSemantic.sourceDirectory = build/casl/xmlast`
+- `caslSemantic.destinationDirectory = build/casl/semantic`
+- `ds2XmlAst.sourceDirectory = src/main/ds2`
+- `ds2XmlAst.destinationDirectory = build/ds2/xmlast`
+- `ds2Semantic.sourceDirectory = src/main/ds2`
+- `ds2Semantic.destinationDirectory = build/ds2/semantic`
 
-## Grammar Coverage (POC)
-
-DATA step:
-
-- `data <name>; ... run;`
-- dataset options in header (`keep=...`, `drop=...`)
-- `set <name>;`
-- assignment statements with arithmetic and grouping (`x = (a * b) - c;`)
-- `format` statements (POC slice)
-- `output;`
-
-PROC SQL:
-
-- `proc sql; ... quit;`
-- `create table <name> as select ... from ... ;`
-- `select <cols|*> from <name> [where <expr>]`
-- `left|right|inner join ... on ...` (POC slice)
-- boolean predicates with `and` / `or`
-
-## Macro Expansion Coverage (POC)
-
-Supported:
-
-- `%let name = value;`
-- `%macro name; ... %mend;`
-- `%name;` macro invocation
-- references: `&name` and `&name.`
-- predefined Gradle-supplied macros (`sasMacro.predefinedMacros`)
-- unresolved macro reporting (`sasMacro.failOnUndefinedMacro`)
-
-## Usage Example
-
-```groovy
-plugins {
-	id 'java'
-	id 'name.jurgenei.gradle.antlr.sas'
-}
-
-tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
-	predefinedMacros.put('ENV', 'dev')
-}
-
-tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-	continueOnError.set(false)
-	failOnError.set(true)
-}
-```
-
-Run pipeline:
+## Quick Run
 
 ```bash
-./gradlew sasPipeline
+./gradlew -p gradle-antlr-sas-plugin sasPipeline
+./gradlew -p gradle-antlr-sas-plugin caslPipeline
+./gradlew -p gradle-antlr-sas-plugin ds2Pipeline
 ```
 
-## TDD and Regression Strategy
+## Samples
 
-Test layers:
+Runnable samples live in `samples/`:
 
-- Unit tests for macro processor behavior
-- Plugin unit tests for registration, defaults, and task chaining
-- Functional tests for end-to-end pipeline execution
-- Fixture-driven regression harness in `src/test/resources/regression/*`
-- Includes baseline + extended grammar cases (`case-basic`, `case-extended`)
+- `samples/sas`
+- `samples/casl`
+- `samples/ds2`
 
-Run full verification:
+Each sample uses composite build in `settings.gradle`:
+
+```groovy
+pluginManagement {
+    includeBuild('../..')
+}
+```
+
+Run samples from `gradle-antlr-sas-plugin` directory:
+
+```bash
+./gradlew -p samples/sas sasPipeline
+./gradlew -p samples/casl caslPipeline
+./gradlew -p samples/ds2 ds2Pipeline
+```
+
+See `samples/README.md` for output locations.
+
+## Scope (POC)
+
+Implemented:
+
+- Plugin and task registration in `SasGrammarPlugin`
+- SAS macro expansion subset (`%let`, `%macro`, `%mend`, `%name`, `&name`)
+- SAS XML AST generation via ANTLR
+- CASL XML AST + semantic extraction
+- DS2 XML AST + semantic extraction
+- Functional and regression test harnesses
+
+Not implemented:
+
+- Full SAS language coverage
+- Full macro language semantics
+- Full CASL action language
+- Full DS2 language coverage
+
+## Verification
 
 ```bash
 ./gradlew -p gradle-antlr-sas-plugin clean test jacocoTestReport
 ```
-
-## Architecture Notes
-
-This module targets incremental delivery:
-
-1. Stable two-stage pipeline (`sasMacro` -> `sasXmlAst`)
-2. Expand grammar and macro features in test-backed slices
-3. Introduce independent CASL module later, reusing shared semantic interfaces
-
-CASL direction is intentionally separate from traditional SAS because syntax and execution model differ.

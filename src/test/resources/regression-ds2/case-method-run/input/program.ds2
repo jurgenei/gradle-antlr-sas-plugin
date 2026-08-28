@@ -1,0 +1,10 @@
+proc ds2;
+data work.demo;
+  dcl int x;
+  method run();
+    x = 10;
+  endmethod;
+enddata;
+run;
+quit;
+

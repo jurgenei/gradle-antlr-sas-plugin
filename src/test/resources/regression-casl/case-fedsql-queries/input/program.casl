@@ -1,0 +1,3 @@
+fedSql.execDirect / query='select c.id, c.amount from cars c where c.amount >= 10';
+fedSql.execDirect / query='select a.id from cars a left join dim b on a.id = b.id where a.id > 0';
+

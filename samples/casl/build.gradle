@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+    id 'name.jurgenei.gradle.antlr.sas'
+}
+
+tasks.named('caslXmlAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask) {
+    sourceDirectory.set(layout.projectDirectory.dir('src/main/casl'))
+    destinationDirectory.set(layout.buildDirectory.dir('output/casl/xmlast'))
+    targetExtension.set('.xml')
+}
+
+tasks.named('caslSemantic', name.jurgenei.gradle.antlr.CaslSemanticExtractGradleTask) {
+    sourceDirectory.set(tasks.named('caslXmlAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask)
+            .flatMap { it.destinationDirectory })
+    caslSourceDirectory.set(tasks.named('caslXmlAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask)
+            .flatMap { it.sourceDirectory })
+    destinationDirectory.set(layout.buildDirectory.dir('output/casl/semantic'))
+}
+

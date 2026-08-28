@@ -1,0 +1,5 @@
+threshold = 42;
+table.loadTable / caslib='Public', path='cars.sashdat';
+fedSql.execDirect / query='select * from cars';
+if threshold > 5 then run;
+

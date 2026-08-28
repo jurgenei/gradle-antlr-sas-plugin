@@ -52,6 +52,9 @@ sourceSets {
         antlr {
             srcDirs = ['src/main/antlr/name/jurgenei/parsers']
             include 'Sas.g4'
+            include 'Casl.g4'
+            include 'FedSql.g4'
+            include 'Ds2.g4'
         }
         resources {
             srcDir 'src/main/antlr'
@@ -78,6 +81,35 @@ tasks.named('jacocoTestReport') {
         xml.required = true
         html.required = true
     }
+}
+
+tasks.register('verifySampleSas', Exec) {
+    group = 'verification'
+    description = 'Runs SAS sample macro and XML AST tasks.'
+    workingDir = projectDir
+    commandLine './gradlew', '-p', 'samples/sas', 'clean', 'sasMacro', 'sasXmlAst'
+}
+
+tasks.register('verifySampleCasl', Exec) {
+    group = 'verification'
+    description = 'Runs CASL sample XML AST and semantic tasks.'
+    workingDir = projectDir
+    commandLine './gradlew', '-p', 'samples/casl', 'clean', 'caslXmlAst', 'caslSemantic'
+}
+
+tasks.register('verifySampleDs2', Exec) {
+    group = 'verification'
+    description = 'Runs DS2 sample XML AST and semantic tasks.'
+    workingDir = projectDir
+    commandLine './gradlew', '-p', 'samples/ds2', 'clean', 'ds2XmlAst', 'ds2Semantic'
+}
+
+tasks.register('verifySamples') {
+    group = 'verification'
+    description = 'Runs all sample verification task chains.'
+    dependsOn tasks.named('verifySampleSas')
+    dependsOn tasks.named('verifySampleCasl')
+    dependsOn tasks.named('verifySampleDs2')
 }
 
 tasks.named('check') {

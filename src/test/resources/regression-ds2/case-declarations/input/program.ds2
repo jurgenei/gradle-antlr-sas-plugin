@@ -1,0 +1,11 @@
+proc ds2;
+data work.decl;
+  declare varchar name;
+  dcl int amount;
+  method run();
+    amount = 2 + 3;
+  endmethod;
+enddata;
+run;
+quit;
+

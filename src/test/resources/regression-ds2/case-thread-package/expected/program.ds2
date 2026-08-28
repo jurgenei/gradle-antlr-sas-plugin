@@ -1,0 +1,27 @@
+proc ds2;
+package work.pkg;
+  method init(varchar name);
+    x = 1;
+  endmethod;
+endpackage;
+
+thread work.worker;
+  method run();
+    y = 2;
+  endmethod;
+endthread;
+
+data work.demo;
+  dcl int x;
+  set from work.source;
+  method run();
+    helper();
+    worker.execute();
+  endmethod;
+  method helper();
+    x = 3;
+  endmethod;
+enddata;
+run;
+quit;
+
