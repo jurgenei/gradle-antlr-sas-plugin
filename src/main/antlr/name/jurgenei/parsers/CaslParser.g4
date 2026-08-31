@@ -1,8 +1,10 @@
-grammar Casl;
+parser grammar CaslParser;
 
 @header {
 package name.jurgenei.parsers;
 }
+
+options { tokenVocab = CaslLexer; }
 
 program
     : statement* EOF
@@ -109,67 +111,4 @@ literal
 identifier
     : ID
     ;
-
-RUN: R U N;
-IF: I F;
-THEN: T H E N;
-AND: A N D;
-OR: O R;
-TRUE: T R U E;
-FALSE: F A L S E;
-NULL: N U L L;
-
-LBRACE: '{';
-RBRACE: '}';
-LBRACK: '[';
-RBRACK: ']';
-LPAREN: '(';
-RPAREN: ')';
-COMMA: ',';
-SEMI: ';';
-DOT: '.';
-EQ: '=';
-NEQ: '^=' | '!=';
-LTE: '<=';
-GTE: '>=';
-LT: '<';
-GT: '>';
-PLUS: '+';
-MINUS: '-';
-STAR: '*';
-SLASH: '/';
-
-NUMBER: [0-9]+ ('.' [0-9]+)?;
-STRING: '\'' ('\'\'' | ~'\'')* '\'';
-ID: [A-Za-z_][A-Za-z0-9_]*;
-
-BLOCK_COMMENT: '/*' .*? '*/' -> skip;
-WS: [ \t\r\n]+ -> skip;
-
-fragment A: [aA];
-fragment B: [bB];
-fragment C: [cC];
-fragment D: [dD];
-fragment E: [eE];
-fragment F: [fF];
-fragment G: [gG];
-fragment H: [hH];
-fragment I: [iI];
-fragment J: [jJ];
-fragment K: [kK];
-fragment L: [lL];
-fragment M: [mM];
-fragment N: [nN];
-fragment O: [oO];
-fragment P: [pP];
-fragment Q: [qQ];
-fragment R: [rR];
-fragment S: [sS];
-fragment T: [tT];
-fragment U: [uU];
-fragment V: [vV];
-fragment W: [wW];
-fragment X: [xX];
-fragment Y: [yY];
-fragment Z: [zZ];
 

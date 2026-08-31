@@ -1,0 +1,15 @@
+proc ds2;
+data work.demo;
+  dcl varchar(10) code;
+  dcl int i;
+  method run();
+    do i = 1 to 3;
+      if code not in ('A', 'B') then do;
+        code = 'A';
+      end;
+    end;
+  end;
+enddata;
+run;
+quit;
+

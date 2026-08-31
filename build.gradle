@@ -92,10 +92,14 @@ sourceSets {
     main {
         antlr {
             srcDirs = ['src/main/antlr/name/jurgenei/parsers']
-            include 'Sas.g4'
-            include 'Casl.g4'
-            include 'FedSql.g4'
-            include 'Ds2.g4'
+            include 'SasLexer.g4'
+            include 'SasParser.g4'
+            include 'CaslLexer.g4'
+            include 'CaslParser.g4'
+            include 'FedSqlLexer.g4'
+            include 'FedSqlParser.g4'
+            include 'Ds2Lexer.g4'
+            include 'Ds2Parser.g4'
         }
         resources {
             srcDir 'src/main/antlr'

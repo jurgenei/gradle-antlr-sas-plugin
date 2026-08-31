@@ -2,7 +2,7 @@ package name.jurgenei.gradle.antlr;
 
 import name.jurgenei.gradle.antlr.semantic.Ds2SemanticProgram;
 import name.jurgenei.gradle.antlr.semantic.Ds2SemanticProgramJsonWriter;
-import name.jurgenei.parsers.Ds2BaseListener;
+import name.jurgenei.parsers.Ds2ParserBaseListener;
 import name.jurgenei.parsers.Ds2Lexer;
 import name.jurgenei.parsers.Ds2Parser;
 import org.antlr.v4.runtime.BaseErrorListener;
@@ -169,7 +169,7 @@ public abstract class Ds2SemanticExtractGradleTask extends DefaultTask {
         return base + ".semantic.json";
     }
 
-    private static final class SemanticCollector extends Ds2BaseListener {
+    private static final class SemanticCollector extends Ds2ParserBaseListener {
 
         private final List<String> methodNames = new ArrayList<>();
         private final List<String> declarationNames = new ArrayList<>();
@@ -193,7 +193,7 @@ public abstract class Ds2SemanticExtractGradleTask extends DefaultTask {
 
         @Override
         public void enterPackageBlock(final Ds2Parser.PackageBlockContext ctx) {
-            packageBlockNames.add(ctx.identifier().getText());
+            packageBlockNames.add(ctx.packageName().getText());
         }
 
         @Override
@@ -215,8 +215,8 @@ public abstract class Ds2SemanticExtractGradleTask extends DefaultTask {
 
         @Override
         public void enterDeclarationStatement(final Ds2Parser.DeclarationStatementContext ctx) {
-            if (ctx.identifier().size() >= 2) {
-                declarationNames.add(ctx.identifier(0).getText() + " " + ctx.identifier(1).getText());
+            if (ctx.declarationType() != null && !ctx.declarationItem().isEmpty()) {
+                declarationNames.add(ctx.declarationType().getText() + " " + ctx.declarationItem(0).identifier().getText());
             }
         }
 
