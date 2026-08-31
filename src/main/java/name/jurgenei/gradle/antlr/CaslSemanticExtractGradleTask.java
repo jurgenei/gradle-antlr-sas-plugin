@@ -2,7 +2,7 @@ package name.jurgenei.gradle.antlr;
 
 import name.jurgenei.gradle.antlr.semantic.NormalizedSemanticProgram;
 import name.jurgenei.gradle.antlr.semantic.SemanticProgramJsonWriter;
-import name.jurgenei.parsers.CaslBaseListener;
+import name.jurgenei.parsers.CaslParserBaseListener;
 import name.jurgenei.parsers.CaslLexer;
 import name.jurgenei.parsers.CaslParser;
 import name.jurgenei.parsers.FedSqlLexer;
@@ -225,7 +225,7 @@ public abstract class CaslSemanticExtractGradleTask extends DefaultTask {
         return base + ".semantic.json";
     }
 
-    private final class SemanticCollector extends CaslBaseListener {
+    private final class SemanticCollector extends CaslParserBaseListener {
 
         private final String sourceLabel;
         private final List<String> actions = new ArrayList<>();

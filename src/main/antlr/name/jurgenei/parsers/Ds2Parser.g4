@@ -1,8 +1,10 @@
-grammar Ds2;
+parser grammar Ds2Parser;
 
 @header {
 package name.jurgenei.parsers;
 }
+
+options { tokenVocab = Ds2Lexer; }
 
 program
     : statement* EOF
@@ -265,91 +267,3 @@ identifier
     : ID (DOT ID)*
     ;
 
-PROC: P R O C;
-DS2: D S '2';
-DATA: D A T A;
-ENDDATA: E N D D A T A;
-METHOD: M E T H O D;
-ENDMETHOD: E N D M E T H O D;
-RUN: R U N;
-QUIT: Q U I T;
-DCL: D C L;
-DECLARE: D E C L A R E;
-IF: I F;
-THEN: T H E N;
-RETURN: R E T U R N;
-PACKAGE: P A C K A G E;
-ENDPACKAGE: E N D P A C K A G E;
-THREAD: T H R E A D;
-ENDTHREAD: E N D T H R E A D;
-SET: S E T;
-FROM: F R O M;
-DO: D O;
-END: E N D;
-ELSE: E L S E;
-TO: T O;
-IN: I N;
-NOT: N O T;
-GOTO: G O T O;
-WHILE: W H I L E;
-OUT: O U T;
-IN_OUT: I N '_' O U T;
-OR: O R;
-AND: A N D;
-NULL_LITERAL: N U L L;
-
-LPAREN: '(';
-RPAREN: ')';
-COMMA: ',';
-SEMI: ';';
-DOT: '.';
-EQ: '=';
-ASSIGN: ':=';
-NEQ: '^=' | '!=';
-LTE: '<=';
-GTE: '>=';
-LT: '<';
-GT: '>';
-COLON: ':';
-PLUS: '+';
-MINUS: '-';
-STAR: '*';
-SLASH: '/';
-CONCAT: '||';
-LBRACK: '[';
-RBRACK: ']';
-
-NUMBER: [0-9]+ ('.' [0-9]+)?;
-STRING: '\'' ('\'\'' | ~'\'')* '\'';
-DQ_STRING: '"' ('\\"' | ~["\r\n])* '"';
-ID: [A-Za-z_][A-Za-z0-9_]*;
-
-BLOCK_COMMENT: '/*' .*? '*/' -> skip;
-WS: [ \t\r\n]+ -> skip;
-
-fragment A: [aA];
-fragment B: [bB];
-fragment C: [cC];
-fragment D: [dD];
-fragment E: [eE];
-fragment F: [fF];
-fragment G: [gG];
-fragment H: [hH];
-fragment I: [iI];
-fragment J: [jJ];
-fragment K: [kK];
-fragment L: [lL];
-fragment M: [mM];
-fragment N: [nN];
-fragment O: [oO];
-fragment P: [pP];
-fragment Q: [qQ];
-fragment R: [rR];
-fragment S: [sS];
-fragment T: [tT];
-fragment U: [uU];
-fragment V: [vV];
-fragment W: [wW];
-fragment X: [xX];
-fragment Y: [yY];
-fragment Z: [zZ];
