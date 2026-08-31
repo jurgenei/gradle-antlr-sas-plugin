@@ -193,7 +193,7 @@ public abstract class Ds2SemanticExtractGradleTask extends DefaultTask {
 
         @Override
         public void enterPackageBlock(final Ds2Parser.PackageBlockContext ctx) {
-            packageBlockNames.add(ctx.identifier().getText());
+            packageBlockNames.add(ctx.packageName().getText());
         }
 
         @Override
@@ -215,8 +215,8 @@ public abstract class Ds2SemanticExtractGradleTask extends DefaultTask {
 
         @Override
         public void enterDeclarationStatement(final Ds2Parser.DeclarationStatementContext ctx) {
-            if (ctx.identifier().size() >= 2) {
-                declarationNames.add(ctx.identifier(0).getText() + " " + ctx.identifier(1).getText());
+            if (ctx.declarationType() != null && !ctx.declarationItem().isEmpty()) {
+                declarationNames.add(ctx.declarationType().getText() + " " + ctx.declarationItem(0).identifier().getText());
             }
         }
 

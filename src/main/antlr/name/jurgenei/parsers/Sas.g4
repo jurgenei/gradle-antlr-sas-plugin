@@ -9,13 +9,28 @@ program
     ;
 
 statement
-    : dataStep
+    : macroDefinition
+    | macroInvocation
+    | dataStep
     | procSql
+    | genericStatement
     | emptyStatement
     ;
 
 emptyStatement
     : SEMI
+    ;
+
+macroDefinition
+    : PERCENT MACRO ID LPAREN macroParamList? RPAREN SEMI statement* PERCENT MEND SEMI
+    ;
+
+macroParamList
+    : ID (COMMA ID)*
+    ;
+
+macroInvocation
+    : PERCENT ID LPAREN argumentList? RPAREN SEMI?
     ;
 
 dataStep
@@ -25,6 +40,7 @@ dataStep
 dataSetOption
     : KEEP EQ identifierList
     | DROP EQ identifierList
+    | LPAREN dataSetOption (dataSetOption)* RPAREN
     ;
 
 dataStepBody
@@ -35,8 +51,9 @@ dataStepStatement
     : setStatement
     | assignmentStatement
     | formatStatement
-    | outputStatement
     | ifStatement
+    | doBlock
+    | genericStatement
     | emptyStatement
     ;
 
@@ -58,24 +75,35 @@ formatName
     ;
 
 assignmentStatement
-    : identifier EQ expression SEMI
+    : assignable EQ expression SEMI
     ;
 
-outputStatement
-    : OUTPUT SEMI
+assignable
+    : identifier
+    | identifier LBRACK expression RBRACK
     ;
 
 ifStatement
-    : IF condition THEN assignmentStatement
+    : IF condition (THEN (assignmentStatement | doBlock | genericStatement))? (ELSE (assignmentStatement | doBlock | genericStatement))? SEMI?
+    ;
+
+doBlock
+    : DO doHeader? SEMI? dataStepStatement* END SEMI
+    ;
+
+doHeader
+    : identifier EQ expression TO expression
     ;
 
 procSql
-    : PROC SQL SEMI sqlStatement+ QUIT SEMI
+    : PROC SQL SEMI procSqlStatement* QUIT SEMI
     ;
 
-sqlStatement
+procSqlStatement
     : createTableAsStatement
     | selectStatement SEMI
+    | genericSqlStatement
+    | emptyStatement
     ;
 
 createTableAsStatement
@@ -83,7 +111,7 @@ createTableAsStatement
     ;
 
 selectStatement
-    : SELECT selectList FROM fromSource (WHERE condition)?
+    : SELECT DISTINCT? selectList FROM fromSource (WHERE condition)?
     ;
 
 fromSource
@@ -102,6 +130,7 @@ joinType
     : INNER
     | LEFT
     | RIGHT
+    | FULL
     ;
 
 selectList
@@ -110,7 +139,108 @@ selectList
     ;
 
 selectItem
-    : expression (AS identifier)?
+    : caseExpression (AS identifier)?
+    | expression (AS identifier)?
+    ;
+
+caseExpression
+    : CASE whenClause+ (ELSE expression)? END
+    ;
+
+whenClause
+    : WHEN condition THEN expression
+    ;
+
+genericSqlStatement
+    : sqlToken+ SEMI
+    ;
+
+sqlToken
+    : ID
+    | NUMBER
+    | stringLiteral
+    | LPAREN
+    | RPAREN
+    | COMMA
+    | DOT
+    | EQ
+    | NEQ
+    | LT
+    | LTE
+    | GT
+    | GTE
+    | PLUS
+    | MINUS
+    | STAR
+    | SLASH
+    | DOLLAR
+    | SELECT
+    | FROM
+    | WHERE
+    | AS
+    | JOIN
+    | LEFT
+    | RIGHT
+    | FULL
+    | INNER
+    | ON
+    | ORDER
+    | BY
+    | GROUP
+    | DISTINCT
+    | AND
+    | OR
+    | NOT
+    | IN
+    | CASE
+    | WHEN
+    | THEN
+    | ELSE
+    | END
+    ;
+
+genericStatement
+    : genericToken+ SEMI
+    ;
+
+genericToken
+    : ID
+    | NUMBER
+    | stringLiteral
+    | LPAREN
+    | RPAREN
+    | LBRACK
+    | RBRACK
+    | COMMA
+    | DOT
+    | EQ
+    | NEQ
+    | LT
+    | LTE
+    | GT
+    | GTE
+    | PLUS
+    | MINUS
+    | STAR
+    | SLASH
+    | DOLLAR
+    | COLON
+    | PERCENT
+    | AMP
+    | AS
+    | CASE
+    | WHEN
+    | THEN
+    | ELSE
+    | END
+    | ORDER
+    | BY
+    | GROUP
+    | DISTINCT
+    | AND
+    | OR
+    | NOT
+    | IN
     ;
 
 condition
@@ -124,6 +254,8 @@ booleanTerm
 booleanFactor
     : LPAREN condition RPAREN
     | expression comparator expression
+    | expression (NOT? IN LPAREN expression (COMMA expression)* RPAREN)
+    | expression
     ;
 
 comparator
@@ -133,10 +265,25 @@ comparator
     | LTE
     | GT
     | GTE
+    | NE
+    | IN
+    | NOT IN
     ;
 
 expression
-    : additiveExpression
+    : logicalOrExpression
+    ;
+
+logicalOrExpression
+    : logicalAndExpression (OR logicalAndExpression)*
+    ;
+
+logicalAndExpression
+    : comparisonExpression (AND comparisonExpression)*
+    ;
+
+comparisonExpression
+    : additiveExpression (comparator additiveExpression)?
     ;
 
 additiveExpression
@@ -150,20 +297,56 @@ multiplicativeExpression
 primaryExpression
     : literal
     | identifier
+    | functionCall
     | LPAREN expression RPAREN
+    ;
+
+functionCall
+    : identifier LPAREN argumentList? RPAREN
+    ;
+
+argumentList
+    : expression (COMMA expression)*
     ;
 
 literal
     : NUMBER
-    | STRING
+    | stringLiteral
+    | DOT
+    ;
+
+stringLiteral
+    : STRING
+    | DQ_STRING
     ;
 
 identifier
-    : ID (DOT ID)*
+    : identifierPart (DOT identifierPart)*
+    ;
+
+identifierPart
+    : ID
+    | IN
+    | OUT
+    | DATA
+    | SET
+    | RUN
+    | PROC
+    | SQL
+    | TABLE
+    | SELECT
+    | FROM
+    | WHERE
+    | AS
+    | IF
+    | THEN
+    | ELSE
+    | DO
+    | END
     ;
 
 identifierList
-    : identifier (identifier)*
+    : identifier+
     ;
 
 DATA: D A T A;
@@ -178,19 +361,35 @@ AS: A S;
 SELECT: S E L E C T;
 FROM: F R O M;
 WHERE: W H E R E;
-OUTPUT: O U T P U T;
 IF: I F;
 THEN: T H E N;
+ELSE: E L S E;
+DO: D O;
+END: E N D;
+TO: T O;
 KEEP: K E E P;
 DROP: D R O P;
 FORMAT: F O R M A T;
 JOIN: J O I N;
 LEFT: L E F T;
 RIGHT: R I G H T;
+FULL: F U L L;
 INNER: I N N E R;
 ON: O N;
 AND: A N D;
 OR: O R;
+NOT: N O T;
+IN: I N;
+OUT: O U T;
+NE: N E;
+CASE: C A S E;
+WHEN: W H E N;
+ORDER: O R D E R;
+BY: B Y;
+GROUP: G R O U P;
+DISTINCT: D I S T I N C T;
+MACRO: M A C R O;
+MEND: M E N D;
 
 STAR: '*';
 COMMA: ',';
@@ -207,10 +406,16 @@ MINUS: '-';
 SLASH: '/';
 LPAREN: '(';
 RPAREN: ')';
+LBRACK: '[';
+RBRACK: ']';
 DOLLAR: '$';
+COLON: ':';
+PERCENT: '%';
+AMP: '&';
 
 NUMBER: [0-9]+ ('.' [0-9]+)?;
 STRING: '\'' ('\'\'' | ~'\'')* '\'';
+DQ_STRING: '"' ('\\"' | ~["\r\n])* '"';
 ID: [A-Za-z_][A-Za-z0-9_]*;
 
 BLOCK_COMMENT: '/*' .*? '*/' -> skip;
@@ -242,4 +447,3 @@ fragment W: [wW];
 fragment X: [xX];
 fragment Y: [yY];
 fragment Z: [zZ];
-

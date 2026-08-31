@@ -24,8 +24,8 @@ public class SasRegressionFunctionalTest {
 
     @Test
     public void executesAllRegressionCases() throws Exception {
-        final URL resource = getClass().getClassLoader().getResource("regression");
-        Assert.assertNotNull("Missing regression fixtures", resource);
+        final URL resource = getClass().getClassLoader().getResource("regression-sas");
+        Assert.assertNotNull("Missing regression-sas fixtures", resource);
 
         final Path root = Path.of(resource.toURI());
         final List<Path> cases = Files.list(root)

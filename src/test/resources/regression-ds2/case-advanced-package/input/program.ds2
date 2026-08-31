@@ -1,0 +1,20 @@
+proc ds2;
+package "${PACKAGE_NAME}" /inline;
+  dcl package logger _logger('App.ing.mas.executethread');
+  dcl varchar(1000) cols[10];
+  dcl int i;
+
+  method execute(varchar(10) reporting_date, package datagrid input_dg, in_out package datagrid output_dg);
+    if datagrid_count(input_dg) > 0 then do;
+      do i = 1 to datagrid_count(input_dg);
+        cols[i] := datagrid_get(input_dg, 'value', i) || '-' || reporting_date;
+      end;
+    end;
+    goto Exit;
+    Exit:
+    ;
+  end;
+endpackage;
+run;
+quit;
+
