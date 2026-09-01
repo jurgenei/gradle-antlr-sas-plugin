@@ -2,6 +2,10 @@
 **/build/
 !**/src/**/build/
 
+**/*.tokens
+**/*.interp
+**/gen/
+
 # Ignore Gradle GUI config
 gradle-app.setting
 

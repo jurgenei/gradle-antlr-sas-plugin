@@ -6,17 +6,17 @@ package name.jurgenei.parsers;
 
 options { caseInsensitive = true; }
 
-SELECT: 'SELECT';
-FROM: 'FROM';
-WHERE: 'WHERE';
-AS: 'AS';
-JOIN: 'JOIN';
-INNER: 'INNER';
-LEFT: 'LEFT';
-RIGHT: 'RIGHT';
-ON: 'ON';
 AND: 'AND';
+AS: 'AS';
+FROM: 'FROM';
+INNER: 'INNER';
+JOIN: 'JOIN';
+LEFT: 'LEFT';
+ON: 'ON';
 OR: 'OR';
+RIGHT: 'RIGHT';
+SELECT: 'SELECT';
+WHERE: 'WHERE';
 
 STAR: '*';
 COMMA: ',';
