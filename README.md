@@ -3,9 +3,9 @@
 ![Conformance](https://img.shields.io/badge/Conformance-Check--All%20Passing-brightgreen)
 
 [![Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/name.jurgenei.gradle.antlr.sas?label=Plugin%20Portal)](https://plugins.gradle.org/plugin/name.jurgenei.gradle.antlr.sas)
-[![Build and Test](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml)
-[![Coverage CI](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml/badge.svg)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml)
-[![Coverage](https://codecov.io/gh/jurgenei/gradle-antlr-sas-plugin/branch/main/graph/badge.svg)](https://codecov.io/gh/jurgenei/gradle-antlr-sas-plugin)
+[![Build and Test](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml/badge.svg?branch=release%2F0.1.0)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml?query=branch%3Arelease%2F0.1.0)
+[![Coverage CI](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml/badge.svg?branch=release%2F0.1.0)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml?query=branch%3Arelease%2F0.1.0)
+[![Coverage](https://codecov.io/gh/jurgenei/gradle-antlr-sas-plugin/graph/badge.svg?branch=release%2F0.1.0)](https://app.codecov.io/gh/jurgenei/gradle-antlr-sas-plugin?branch=release%2F0.1.0)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/java-21+-green.svg)](https://www.oracle.com/java/)
 [![Gradle](https://img.shields.io/badge/gradle-8+-blue.svg)](https://gradle.org/)
