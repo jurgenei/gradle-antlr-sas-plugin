@@ -5,7 +5,7 @@
 [![Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/name.jurgenei.gradle.antlr.sas?label=Plugin%20Portal)](https://plugins.gradle.org/plugin/name.jurgenei.gradle.antlr.sas)
 [![Build and Test](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml/badge.svg?branch=release%2F0.1.0)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml?query=branch%3Arelease%2F0.1.0)
 [![Coverage CI](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml/badge.svg?branch=release%2F0.1.0)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml?query=branch%3Arelease%2F0.1.0)
-[![Coverage](https://codecov.io/gh/jurgenei/gradle-antlr-sas-plugin/graph/badge.svg?branch=release%2F0.1.0)](https://app.codecov.io/gh/jurgenei/gradle-antlr-sas-plugin?branch=release%2F0.1.0)
+[![Coverage](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fapi.codecov.io%2Fapi%2Fv2%2Fgithub%2Fjurgenei%2Frepos%2Fgradle-antlr-sas-plugin%2Fcommits%3Fbranch%3Drelease%252F0.1.0&query=%24.results%5B0%5D.totals.coverage&label=coverage&suffix=%25)](https://app.codecov.io/gh/jurgenei/gradle-antlr-sas-plugin?branch=release%2F0.1.0)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/java-21+-green.svg)](https://www.oracle.com/java/)
 [![Gradle](https://img.shields.io/badge/gradle-8+-blue.svg)](https://gradle.org/)
