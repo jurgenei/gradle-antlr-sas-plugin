@@ -47,6 +47,18 @@ plugins {
 - `ds2Semantic`: extracts DS2 semantic JSON summaries
 - `ds2Pipeline`: runs DS2 XML AST + semantic stages
 
+XML AST tasks support S-expression output too (`sasXmlAst`, `caslXmlAst`, `ds2XmlAst`):
+
+```groovy
+tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+    targetExtension.set('.sexpr')
+    sexprFormat.set('beautified')
+}
+```
+
+- `targetExtension`: `.xml` (default) or `.sexpr`
+- `sexprFormat`: `compact` (default) or `beautified`
+
 ## Default Conventions
 
 - `sasMacro.sourceDirectory = src/main/sas`
@@ -106,6 +118,15 @@ Implemented:
 - CASL XML AST + semantic extraction
 - DS2 XML AST + semantic extraction
 - Functional and regression test harnesses
+
+## Extend with new language stage
+
+To add another language pipeline inside this plugin:
+
+1. Create `XmlAst<Lang>GradleTask extends XmlAstGradleTask`.
+2. Apply defaults with `LanguageTaskDefaults.of(...).applyTo(this)`.
+3. Register task in `SasGrammarPlugin` and wire runtime with `LanguagePluginSupport.wireJavaRuntimeClasspath(...)`.
+4. Add unit test for defaults plus `targetExtension='.sexpr'` and `sexprFormat='beautified'` override.
 
 Not implemented:
 

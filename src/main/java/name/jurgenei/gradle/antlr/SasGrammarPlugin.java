@@ -2,9 +2,6 @@ package name.jurgenei.gradle.antlr;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
-import org.gradle.api.plugins.JavaPluginExtension;
-import org.gradle.api.tasks.SourceSet;
-import org.gradle.api.tasks.SourceSetContainer;
 import org.gradle.api.tasks.TaskProvider;
 
 /**
@@ -70,26 +67,9 @@ public final class SasGrammarPlugin implements Plugin<Project> {
             task.getDestinationDirectory().convention(project.getLayout().getBuildDirectory().dir("ds2/semantic"));
         });
 
-        project.getPlugins().withId("java", plugin -> {
-            final JavaPluginExtension javaPluginExtension = project.getExtensions().getByType(JavaPluginExtension.class);
-            final SourceSetContainer sourceSets = javaPluginExtension.getSourceSets();
-            final SourceSet mainSourceSet = sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME);
-
-            project.getTasks().withType(XmlAstSasGradleTask.class).configureEach(task -> {
-                task.getRuntimeClasspath().from(mainSourceSet.getRuntimeClasspath());
-                task.dependsOn(project.getTasks().named("classes"));
-            });
-
-            project.getTasks().withType(XmlAstCaslGradleTask.class).configureEach(task -> {
-                task.getRuntimeClasspath().from(mainSourceSet.getRuntimeClasspath());
-                task.dependsOn(project.getTasks().named("classes"));
-            });
-
-            project.getTasks().withType(XmlAstDs2GradleTask.class).configureEach(task -> {
-                task.getRuntimeClasspath().from(mainSourceSet.getRuntimeClasspath());
-                task.dependsOn(project.getTasks().named("classes"));
-            });
-        });
+        LanguagePluginSupport.wireJavaRuntimeClasspath(project, XmlAstSasGradleTask.class);
+        LanguagePluginSupport.wireJavaRuntimeClasspath(project, XmlAstCaslGradleTask.class);
+        LanguagePluginSupport.wireJavaRuntimeClasspath(project, XmlAstDs2GradleTask.class);
 
         project.getTasks().register("sasPipeline", task -> {
             task.setGroup("sas");

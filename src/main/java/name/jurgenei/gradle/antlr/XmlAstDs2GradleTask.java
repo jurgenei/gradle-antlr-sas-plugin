@@ -20,11 +20,13 @@ public abstract class XmlAstDs2GradleTask extends XmlAstGradleTask {
     @Inject
     public XmlAstDs2GradleTask(final ObjectFactory objects) {
         super(objects);
-        getGrammar().convention("ds2");
-        getParserClassName().convention("name.jurgenei.parsers.Ds2Parser");
-        getLexerClassName().convention("name.jurgenei.parsers.Ds2Lexer");
-        getStartRule().convention("program");
-        getIncludes().convention(List.of("**/*.ds2", "**/*.sas"));
+        LanguageTaskDefaults.of(
+                "ds2",
+                "name.jurgenei.parsers.Ds2Parser",
+                "name.jurgenei.parsers.Ds2Lexer",
+                "program",
+                List.of("**/*.ds2", "**/*.sas"))
+            .applyTo(this);
     }
 }
 
