@@ -38,9 +38,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'name.jurgenei.gradle:gradle-antlr-plugin:0.1.2'
-    antlr 'org.antlr:antlr4:4.13.2'
+    implementation 'name.jurgenei.gradle:gradle-antlr-plugin:0.1.5'
     implementation 'org.antlr:antlr4-runtime:4.13.2'
+
+    antlr 'org.antlr:antlr4:4.13.2'
 
     testImplementation gradleTestKit()
     testImplementation 'junit:junit:4.13.2'

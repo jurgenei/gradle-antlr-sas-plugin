@@ -9,6 +9,13 @@ tasks.named('caslXmlAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask) {
     targetExtension.set('.xml')
 }
 
+tasks.register('caslSexprAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask) {
+    sourceDirectory.set(layout.projectDirectory.dir('src/main/casl'))
+    destinationDirectory.set(layout.buildDirectory.dir('output/casl/xmlast'))
+    targetExtension.set('.sexpr')
+    sexprFormat.set('beautified')
+}
+
 tasks.named('caslSemantic', name.jurgenei.gradle.antlr.CaslSemanticExtractGradleTask) {
     sourceDirectory.set(tasks.named('caslXmlAst', name.jurgenei.gradle.antlr.XmlAstCaslGradleTask)
             .flatMap { it.destinationDirectory })

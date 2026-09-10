@@ -39,6 +39,8 @@ public class CaslGrammarPluginTest {
         Assert.assertEquals("name.jurgenei.parsers.CaslLexer", task.getLexerClassName().get());
         Assert.assertEquals("program", task.getStartRule().get());
         Assert.assertTrue(task.getIncludes().get().contains("**/*.casl"));
+        Assert.assertEquals(".xml", task.getTargetExtension().get());
+        Assert.assertEquals("compact", task.getSexprFormat().get());
 
         final Task pipeline = project.getTasks().getByName("caslPipeline");
         final TaskDependency dependencies = pipeline.getTaskDependencies();
@@ -47,6 +49,21 @@ public class CaslGrammarPluginTest {
                 .map(Task::getName)
                 .collect(Collectors.toSet());
         Assert.assertTrue(dependencyNames.contains("caslSemantic"));
+    }
+
+    @Test
+    public void supportsSexprOutputConfigurationForCaslTask() {
+        final Project project = ProjectBuilder.builder().build();
+        project.getPluginManager().apply("java");
+
+        new SasGrammarPlugin().apply(project);
+
+        final XmlAstCaslGradleTask task = XmlAstCaslGradleTask.class.cast(project.getTasks().getByName("caslXmlAst"));
+        task.getTargetExtension().set(".sexpr");
+        task.getSexprFormat().set("beautified");
+
+        Assert.assertEquals(".sexpr", task.getTargetExtension().get());
+        Assert.assertEquals("beautified", task.getSexprFormat().get());
     }
 }
 

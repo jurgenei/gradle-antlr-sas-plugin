@@ -20,11 +20,13 @@ public abstract class XmlAstSasGradleTask extends XmlAstGradleTask {
     @Inject
     public XmlAstSasGradleTask(final ObjectFactory objects) {
         super(objects);
-        getGrammar().convention("sas");
-        getParserClassName().convention("name.jurgenei.parsers.SasParser");
-        getLexerClassName().convention("name.jurgenei.parsers.SasLexer");
-        getStartRule().convention("program");
-        getIncludes().convention(List.of("**/*.sas"));
+        LanguageTaskDefaults.of(
+                "sas",
+                "name.jurgenei.parsers.SasParser",
+                "name.jurgenei.parsers.SasLexer",
+                "program",
+                List.of("**/*.sas"))
+            .applyTo(this);
     }
 }
 

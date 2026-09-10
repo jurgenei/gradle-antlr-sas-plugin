@@ -6,14 +6,14 @@ package name.jurgenei.parsers;
 
 options { caseInsensitive = true; }
 
-RUN: 'RUN';
-IF: 'IF';
-THEN: 'THEN';
 AND: 'AND';
-OR: 'OR';
-TRUE: 'TRUE';
 FALSE: 'FALSE';
+IF: 'IF';
 NULL: 'NULL';
+OR: 'OR';
+RUN: 'RUN';
+THEN: 'THEN';
+TRUE: 'TRUE';
 
 LBRACE: '{';
 RBRACE: '}';

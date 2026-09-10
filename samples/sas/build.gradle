@@ -16,3 +16,10 @@ tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
     targetExtension.set('.xml')
 }
 
+tasks.register('sasSexprAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+    sourceDirectory.set(tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask)
+            .flatMap { it.destinationDirectory })
+    destinationDirectory.set(layout.buildDirectory.dir('output/sas/xmlast'))
+    targetExtension.set('.sexpr')
+    sexprFormat.set('beautified')
+}

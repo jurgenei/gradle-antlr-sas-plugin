@@ -20,11 +20,13 @@ public abstract class XmlAstCaslGradleTask extends XmlAstGradleTask {
     @Inject
     public XmlAstCaslGradleTask(final ObjectFactory objects) {
         super(objects);
-        getGrammar().convention("casl");
-        getParserClassName().convention("name.jurgenei.parsers.CaslParser");
-        getLexerClassName().convention("name.jurgenei.parsers.CaslLexer");
-        getStartRule().convention("program");
-        getIncludes().convention(List.of("**/*.casl", "**/*.cas"));
+        LanguageTaskDefaults.of(
+                "casl",
+                "name.jurgenei.parsers.CaslParser",
+                "name.jurgenei.parsers.CaslLexer",
+                "program",
+                List.of("**/*.casl", "**/*.cas"))
+            .applyTo(this);
     }
 }
 

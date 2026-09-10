@@ -50,6 +50,30 @@ public class SasGrammarPluginFunctionalTest {
         Assert.assertTrue(xml.contains("program"));
     }
 
+    @Test
+    public void runsMacroToSexprPipelineWithBeautifiedFormat() throws Exception {
+        final File projectDir = temporaryFolder.newFolder("functional-sas-pipeline-sexpr");
+        writeSettings(projectDir);
+        writeBuildFile(projectDir, """
+                tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+                    targetExtension.set('.sexpr')
+                    sexprFormat.set('beautified')
+                }
+                """);
+        writeSasSource(projectDir);
+
+        final BuildResult result = run(projectDir, "sasPipeline");
+        Assert.assertTrue(result.getOutput().contains("sasMacro"));
+
+        final File sexprAst = new File(projectDir, "build/sas/xmlast/program.sexpr");
+        Assert.assertTrue("S-expression AST file not found", sexprAst.isFile());
+
+        final String sexpr = Files.readString(sexprAst.toPath(), StandardCharsets.UTF_8);
+        Assert.assertTrue(sexpr.startsWith("(."));
+        Assert.assertTrue(sexpr.contains("(ast"));
+        Assert.assertTrue(sexpr.contains(System.lineSeparator()));
+    }
+
     private static BuildResult run(final File projectDir, final String... args) {
         return GradleRunner.create()
                 .withProjectDir(projectDir)
@@ -66,6 +90,10 @@ public class SasGrammarPluginFunctionalTest {
     }
 
     private static void writeBuildFile(final File projectDir) throws Exception {
+        writeBuildFile(projectDir, "");
+    }
+
+    private static void writeBuildFile(final File projectDir, final String extraConfig) throws Exception {
         Files.writeString(
                 projectDir.toPath().resolve("build.gradle"),
                 """
@@ -73,7 +101,9 @@ public class SasGrammarPluginFunctionalTest {
                     id 'java'
                     id 'name.jurgenei.gradle.antlr.sas'
                 }
-                """,
+
+                %s
+                """.formatted(extraConfig),
                 StandardCharsets.UTF_8);
     }
 
