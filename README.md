@@ -51,13 +51,13 @@ XML AST tasks support S-expression output too (`sasXmlAst`, `caslXmlAst`, `ds2Xm
 
 ```groovy
 tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-    targetExtension.set('.sexpr')
-    sexprFormat.set('beautified')
+    targetExtension.set('.xir')
+    xirFormat.set('beautified')
 }
 ```
 
-- `targetExtension`: `.xml` (default) or `.sexpr`
-- `sexprFormat`: `compact` (default) or `beautified`
+- `targetExtension`: `.xml` (default) or `.xir`
+- `xirFormat`: `compact` (default) or `beautified`
 
 ## Default Conventions
 
@@ -126,7 +126,7 @@ To add another language pipeline inside this plugin:
 1. Create `XmlAst<Lang>GradleTask extends XmlAstGradleTask`.
 2. Apply defaults with `LanguageTaskDefaults.of(...).applyTo(this)`.
 3. Register task in `SasGrammarPlugin` and wire runtime with `LanguagePluginSupport.wireJavaRuntimeClasspath(...)`.
-4. Add unit test for defaults plus `targetExtension='.sexpr'` and `sexprFormat='beautified'` override.
+4. Add unit test for defaults plus `targetExtension='.xir'` and `xirFormat='beautified'` override.
 
 Not implemented:
 

@@ -51,13 +51,13 @@ public class SasGrammarPluginFunctionalTest {
     }
 
     @Test
-    public void runsMacroToSexprPipelineWithBeautifiedFormat() throws Exception {
-        final File projectDir = temporaryFolder.newFolder("functional-sas-pipeline-sexpr");
+    public void runsMacroToXirPipelineWithBeautifiedFormat() throws Exception {
+        final File projectDir = temporaryFolder.newFolder("functional-sas-pipeline-xir");
         writeSettings(projectDir);
         writeBuildFile(projectDir, """
                 tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-                    targetExtension.set('.sexpr')
-                    sexprFormat.set('beautified')
+                    targetExtension.set('.xir')
+                    xirFormat.set('beautified')
                 }
                 """);
         writeSasSource(projectDir);
@@ -65,13 +65,13 @@ public class SasGrammarPluginFunctionalTest {
         final BuildResult result = run(projectDir, "sasPipeline");
         Assert.assertTrue(result.getOutput().contains("sasMacro"));
 
-        final File sexprAst = new File(projectDir, "build/sas/xmlast/program.sexpr");
-        Assert.assertTrue("S-expression AST file not found", sexprAst.isFile());
+        final File xirAst = new File(projectDir, "build/sas/xmlast/program.xir");
+        Assert.assertTrue("S-expression AST file not found", xirAst.isFile());
 
-        final String sexpr = Files.readString(sexprAst.toPath(), StandardCharsets.UTF_8);
-        Assert.assertTrue(sexpr.startsWith("(."));
-        Assert.assertTrue(sexpr.contains("(ast"));
-        Assert.assertTrue(sexpr.contains(System.lineSeparator()));
+        final String xir = Files.readString(xirAst.toPath(), StandardCharsets.UTF_8);
+        Assert.assertTrue(xir.startsWith("(."));
+        Assert.assertTrue(xir.contains("(ast"));
+        Assert.assertTrue(xir.contains(System.lineSeparator()));
     }
 
     private static BuildResult run(final File projectDir, final String... args) {

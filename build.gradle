@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'name.jurgenei.gradle'
-version = '0.1.1'
+version = '0.1.2'
 
 gradlePlugin {
     plugins {
@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'name.jurgenei.gradle:gradle-antlr-plugin:0.1.5'
+    implementation 'name.jurgenei.gradle:gradle-antlr-plugin:0.1.7'
     implementation 'org.antlr:antlr4-runtime:4.13.2'
 
     antlr 'org.antlr:antlr4:4.13.2'
@@ -167,4 +167,3 @@ tasks.register('verifySamples') {
 tasks.named('check') {
     dependsOn tasks.named('jacocoTestReport')
 }
-
