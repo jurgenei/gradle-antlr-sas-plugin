@@ -49,7 +49,7 @@ public class SasGrammarPluginTest {
         Assert.assertEquals("name.jurgenei.parsers.SasLexer", xmlTask.getLexerClassName().get());
         Assert.assertEquals("program", xmlTask.getStartRule().get());
         Assert.assertEquals(".xml", xmlTask.getTargetExtension().get());
-        Assert.assertEquals("compact", xmlTask.getSexprFormat().get());
+        Assert.assertEquals("compact", xmlTask.getXirFormat().get());
 
         final TaskDependency dependencies = xmlTask.getTaskDependencies();
         final Set<String> dependencyNames = dependencies.getDependencies(xmlTask)
@@ -61,18 +61,18 @@ public class SasGrammarPluginTest {
     }
 
     @Test
-    public void supportsSexprOutputConfigurationForSasTask() {
+    public void supportsXirOutputConfigurationForSasTask() {
         final Project project = ProjectBuilder.builder().build();
         project.getPluginManager().apply("java");
 
         new SasGrammarPlugin().apply(project);
 
         final XmlAstSasGradleTask xmlTask = XmlAstSasGradleTask.class.cast(project.getTasks().getByName("sasXmlAst"));
-        xmlTask.getTargetExtension().set(".sexpr");
-        xmlTask.getSexprFormat().set("beautified");
+        xmlTask.getTargetExtension().set(".xir");
+        xmlTask.getXirFormat().set("beautified");
 
-        Assert.assertEquals(".sexpr", xmlTask.getTargetExtension().get());
-        Assert.assertEquals("beautified", xmlTask.getSexprFormat().get());
+        Assert.assertEquals(".xir", xmlTask.getTargetExtension().get());
+        Assert.assertEquals("beautified", xmlTask.getXirFormat().get());
     }
 }
 

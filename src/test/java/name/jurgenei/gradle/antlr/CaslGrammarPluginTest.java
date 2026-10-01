@@ -40,7 +40,7 @@ public class CaslGrammarPluginTest {
         Assert.assertEquals("program", task.getStartRule().get());
         Assert.assertTrue(task.getIncludes().get().contains("**/*.casl"));
         Assert.assertEquals(".xml", task.getTargetExtension().get());
-        Assert.assertEquals("compact", task.getSexprFormat().get());
+        Assert.assertEquals("compact", task.getXirFormat().get());
 
         final Task pipeline = project.getTasks().getByName("caslPipeline");
         final TaskDependency dependencies = pipeline.getTaskDependencies();
@@ -52,18 +52,18 @@ public class CaslGrammarPluginTest {
     }
 
     @Test
-    public void supportsSexprOutputConfigurationForCaslTask() {
+    public void supportsXirOutputConfigurationForCaslTask() {
         final Project project = ProjectBuilder.builder().build();
         project.getPluginManager().apply("java");
 
         new SasGrammarPlugin().apply(project);
 
         final XmlAstCaslGradleTask task = XmlAstCaslGradleTask.class.cast(project.getTasks().getByName("caslXmlAst"));
-        task.getTargetExtension().set(".sexpr");
-        task.getSexprFormat().set("beautified");
+        task.getTargetExtension().set(".xir");
+        task.getXirFormat().set("beautified");
 
-        Assert.assertEquals(".sexpr", task.getTargetExtension().get());
-        Assert.assertEquals("beautified", task.getSexprFormat().get());
+        Assert.assertEquals(".xir", task.getTargetExtension().get());
+        Assert.assertEquals("beautified", task.getXirFormat().get());
     }
 }
 
