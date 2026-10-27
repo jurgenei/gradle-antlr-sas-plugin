@@ -57,7 +57,7 @@ public class SasGrammarPluginFunctionalTest {
         writeBuildFile(projectDir, """
                 tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
                     targetExtension.set('.xir')
-                    xirFormat.set('beautified')
+                    outputFormat.set('beautified')
                 }
                 """);
         writeSasSource(projectDir);

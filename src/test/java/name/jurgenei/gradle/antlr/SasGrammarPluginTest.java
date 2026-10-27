@@ -49,7 +49,7 @@ public class SasGrammarPluginTest {
         Assert.assertEquals("name.jurgenei.parsers.SasLexer", xmlTask.getLexerClassName().get());
         Assert.assertEquals("program", xmlTask.getStartRule().get());
         Assert.assertEquals(".xml", xmlTask.getTargetExtension().get());
-        Assert.assertEquals("compact", xmlTask.getXirFormat().get());
+        Assert.assertEquals("compact", xmlTask.getOutputFormat().get());
 
         final TaskDependency dependencies = xmlTask.getTaskDependencies();
         final Set<String> dependencyNames = dependencies.getDependencies(xmlTask)
@@ -69,10 +69,10 @@ public class SasGrammarPluginTest {
 
         final XmlAstSasGradleTask xmlTask = XmlAstSasGradleTask.class.cast(project.getTasks().getByName("sasXmlAst"));
         xmlTask.getTargetExtension().set(".xir");
-        xmlTask.getXirFormat().set("beautified");
+        xmlTask.getOutputFormat().set("beautified");
 
         Assert.assertEquals(".xir", xmlTask.getTargetExtension().get());
-        Assert.assertEquals("beautified", xmlTask.getXirFormat().get());
+        Assert.assertEquals("beautified", xmlTask.getOutputFormat().get());
     }
 }
 

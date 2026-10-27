@@ -40,7 +40,7 @@ public class CaslGrammarPluginTest {
         Assert.assertEquals("program", task.getStartRule().get());
         Assert.assertTrue(task.getIncludes().get().contains("**/*.casl"));
         Assert.assertEquals(".xml", task.getTargetExtension().get());
-        Assert.assertEquals("compact", task.getXirFormat().get());
+        Assert.assertEquals("compact", task.getOutputFormat().get());
 
         final Task pipeline = project.getTasks().getByName("caslPipeline");
         final TaskDependency dependencies = pipeline.getTaskDependencies();
@@ -60,10 +60,10 @@ public class CaslGrammarPluginTest {
 
         final XmlAstCaslGradleTask task = XmlAstCaslGradleTask.class.cast(project.getTasks().getByName("caslXmlAst"));
         task.getTargetExtension().set(".xir");
-        task.getXirFormat().set("beautified");
+        task.getOutputFormat().set("beautified");
 
         Assert.assertEquals(".xir", task.getTargetExtension().get());
-        Assert.assertEquals("beautified", task.getXirFormat().get());
+        Assert.assertEquals("beautified", task.getOutputFormat().get());
     }
 }
 

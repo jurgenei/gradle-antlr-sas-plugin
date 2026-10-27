@@ -39,7 +39,7 @@ public class Ds2GrammarPluginTest {
         Assert.assertEquals("name.jurgenei.parsers.Ds2Lexer", xmlTask.getLexerClassName().get());
         Assert.assertEquals("program", xmlTask.getStartRule().get());
         Assert.assertEquals(".xml", xmlTask.getTargetExtension().get());
-        Assert.assertEquals("compact", xmlTask.getXirFormat().get());
+        Assert.assertEquals("compact", xmlTask.getOutputFormat().get());
 
         final Task pipeline = project.getTasks().getByName("ds2Pipeline");
         final TaskDependency dependencies = pipeline.getTaskDependencies();
@@ -59,10 +59,10 @@ public class Ds2GrammarPluginTest {
 
         final XmlAstDs2GradleTask task = XmlAstDs2GradleTask.class.cast(project.getTasks().getByName("ds2XmlAst"));
         task.getTargetExtension().set(".xir");
-        task.getXirFormat().set("beautified");
+        task.getOutputFormat().set("beautified");
 
         Assert.assertEquals(".xir", task.getTargetExtension().get());
-        Assert.assertEquals("beautified", task.getXirFormat().get());
+        Assert.assertEquals("beautified", task.getOutputFormat().get());
     }
 }
 
