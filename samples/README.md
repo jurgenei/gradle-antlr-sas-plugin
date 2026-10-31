@@ -1,6 +1,6 @@
 # Samples
 
-Each sample applies one plugin id: `name.jurgenei.gradle.antlr.sas`.
+Each sample applies one plugin id: `name.flowdigger.gradle.antlr.sas`.
 
 `settings.gradle` in each sample uses composite build:
 
