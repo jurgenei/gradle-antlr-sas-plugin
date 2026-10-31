@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr.semantic;
+package org.flowdigger.gradle.antlr.semantic;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

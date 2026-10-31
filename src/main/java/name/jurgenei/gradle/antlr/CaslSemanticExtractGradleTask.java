@@ -1,12 +1,12 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
-import name.jurgenei.gradle.antlr.semantic.NormalizedSemanticProgram;
-import name.jurgenei.gradle.antlr.semantic.SemanticProgramJsonWriter;
-import name.jurgenei.parsers.CaslParserBaseListener;
-import name.jurgenei.parsers.CaslLexer;
-import name.jurgenei.parsers.CaslParser;
-import name.jurgenei.parsers.FedSqlLexer;
-import name.jurgenei.parsers.FedSqlParser;
+import org.flowdigger.gradle.antlr.semantic.NormalizedSemanticProgram;
+import org.flowdigger.gradle.antlr.semantic.SemanticProgramJsonWriter;
+import org.flowdigger.parsers.CaslParserBaseListener;
+import org.flowdigger.parsers.CaslLexer;
+import org.flowdigger.parsers.CaslParser;
+import org.flowdigger.parsers.FedSqlLexer;
+import org.flowdigger.parsers.FedSqlParser;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;

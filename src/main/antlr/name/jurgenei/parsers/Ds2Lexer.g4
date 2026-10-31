@@ -1,7 +1,7 @@
 lexer grammar Ds2Lexer;
 
 @header {
-package name.jurgenei.parsers;
+package org.flowdigger.parsers;
 }
 
 options { caseInsensitive = true; }

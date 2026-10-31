@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.work.DisableCachingByDefault;
@@ -22,8 +22,8 @@ public abstract class XmlAstDs2GradleTask extends XmlAstGradleTask {
         super(objects);
         LanguageTaskDefaults.of(
                 "ds2",
-                "name.jurgenei.parsers.Ds2Parser",
-                "name.jurgenei.parsers.Ds2Lexer",
+                "org.flowdigger.parsers.Ds2Parser",
+                "org.flowdigger.parsers.Ds2Lexer",
                 "program",
                 List.of("**/*.ds2", "**/*.sas"))
             .applyTo(this);

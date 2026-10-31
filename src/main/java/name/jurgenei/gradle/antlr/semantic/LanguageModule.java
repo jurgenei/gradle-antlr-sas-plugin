@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr.semantic;
+package org.flowdigger.gradle.antlr.semantic;
 
 /**
  * Declares common language-module identity shared by SAS-family modules.

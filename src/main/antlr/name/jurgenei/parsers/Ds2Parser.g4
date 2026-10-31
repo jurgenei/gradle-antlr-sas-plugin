@@ -1,7 +1,7 @@
 parser grammar Ds2Parser;
 
 @header {
-package name.jurgenei.parsers;
+package org.flowdigger.parsers;
 }
 
 options { tokenVocab = Ds2Lexer; }

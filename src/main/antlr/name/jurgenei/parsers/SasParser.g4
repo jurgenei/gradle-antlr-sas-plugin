@@ -1,7 +1,7 @@
 parser grammar SasParser;
 
 @header {
-package name.jurgenei.parsers;
+package org.flowdigger.parsers;
 }
 
 options { tokenVocab = SasLexer; }

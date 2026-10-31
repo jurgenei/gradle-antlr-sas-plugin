@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -35,8 +35,8 @@ public class Ds2GrammarPluginTest {
 
         final XmlAstDs2GradleTask xmlTask = XmlAstDs2GradleTask.class.cast(project.getTasks().getByName("ds2XmlAst"));
         Assert.assertEquals("ds2", xmlTask.getGrammar().get());
-        Assert.assertEquals("name.jurgenei.parsers.Ds2Parser", xmlTask.getParserClassName().get());
-        Assert.assertEquals("name.jurgenei.parsers.Ds2Lexer", xmlTask.getLexerClassName().get());
+        Assert.assertEquals("org.flowdigger.parsers.Ds2Parser", xmlTask.getParserClassName().get());
+        Assert.assertEquals("org.flowdigger.parsers.Ds2Lexer", xmlTask.getLexerClassName().get());
         Assert.assertEquals("program", xmlTask.getStartRule().get());
         Assert.assertEquals(".xml", xmlTask.getTargetExtension().get());
         Assert.assertEquals("compact", xmlTask.getXirFormat().get());

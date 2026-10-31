@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.work.DisableCachingByDefault;
@@ -22,8 +22,8 @@ public abstract class XmlAstCaslGradleTask extends XmlAstGradleTask {
         super(objects);
         LanguageTaskDefaults.of(
                 "casl",
-                "name.jurgenei.parsers.CaslParser",
-                "name.jurgenei.parsers.CaslLexer",
+                "org.flowdigger.parsers.CaslParser",
+                "org.flowdigger.parsers.CaslLexer",
                 "program",
                 List.of("**/*.casl", "**/*.cas"))
             .applyTo(this);

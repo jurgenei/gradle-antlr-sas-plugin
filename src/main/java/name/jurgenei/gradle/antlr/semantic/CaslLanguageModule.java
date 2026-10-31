@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr.semantic;
+package org.flowdigger.gradle.antlr.semantic;
 
 /**
  * Shared semantic descriptor for CASL module.

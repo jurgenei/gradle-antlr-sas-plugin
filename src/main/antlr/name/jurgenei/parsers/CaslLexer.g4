@@ -1,7 +1,7 @@
 lexer grammar CaslLexer;
 
 @header {
-package name.jurgenei.parsers;
+package org.flowdigger.parsers;
 }
 
 options { caseInsensitive = true; }

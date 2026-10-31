@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -55,7 +55,7 @@ public class SasGrammarPluginFunctionalTest {
         final File projectDir = temporaryFolder.newFolder("functional-sas-pipeline-xir");
         writeSettings(projectDir);
         writeBuildFile(projectDir, """
-                tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+                tasks.named('sasXmlAst', org.flowdigger.gradle.antlr.XmlAstSasGradleTask) {
                     targetExtension.set('.xir')
                     xirFormat.set('beautified')
                 }
@@ -99,7 +99,7 @@ public class SasGrammarPluginFunctionalTest {
                 """
                 plugins {
                     id 'java'
-                    id 'name.jurgenei.gradle.antlr.sas'
+                    id 'org.flowdigger.gradle.antlr.sas'
                 }
 
                 %s
