@@ -24,4 +24,3 @@ Outputs:
 - SAS: `samples/sas/src/main/sas` -> `samples/sas/build/output/sas/macro` -> `samples/sas/build/output/sas/xmlast`
 - CASL: `samples/casl/src/main/casl` -> `samples/casl/build/output/casl/xmlast` -> `samples/casl/build/output/casl/semantic`
 - DS2: `samples/ds2/src/main/ds2` -> `samples/ds2/build/output/ds2/xmlast` and `samples/ds2/build/output/ds2/semantic`
-
