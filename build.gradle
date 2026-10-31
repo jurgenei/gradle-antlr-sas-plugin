@@ -5,12 +5,12 @@ plugins {
     id 'antlr'
     id 'java-gradle-plugin'
     id 'jacoco'
-    id 'name.jurgenei.gradle.antlr'
+    id 'org.flowdigger.gradle.antlr'
     id 'maven-publish'
     id 'signing'
 }
 
-group = 'name.jurgenei.gradle'
+group = 'org.flowdigger.gradle'
 version = '0.1.2'
 
 gradlePlugin {
@@ -18,8 +18,8 @@ gradlePlugin {
         website = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
         vcsUrl = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
         sasGrammar {
-            id = 'name.jurgenei.gradle.antlr.sas'
-            implementationClass = 'name.jurgenei.gradle.antlr.SasGrammarPlugin'
+            id = 'org.flowdigger.gradle.antlr.sas'
+            implementationClass = 'org.flowdigger.gradle.antlr.SasGrammarPlugin'
             displayName = 'Gradle ANTLR SAS Plugin'
             description = 'Proof-of-concept SAS macro expansion and XML AST generation plugin.'
             tags.set(['antlr', 'sas', 'xml', 'ast', 'macro'])
@@ -41,7 +41,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'name.jurgenei.gradle:gradle-antlr-plugin:0.1.7'
+    implementation 'org.flowdigger.gradle:gradle-antlr-plugin:0.1.7'
     implementation 'org.antlr:antlr4-runtime:4.13.2'
 
     antlr 'org.antlr:antlr4:4.13.2'
@@ -109,7 +109,7 @@ generateGrammarSource {
 sourceSets {
     main {
         antlr {
-            srcDirs = ['src/main/antlr/name/jurgenei/parsers']
+            srcDirs = ['src/main/antlr/org/flowdigger/parsers']
             include 'SasLexer.g4'
             include 'SasParser.g4'
             include 'CaslLexer.g4'

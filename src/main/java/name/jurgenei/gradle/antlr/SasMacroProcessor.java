@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

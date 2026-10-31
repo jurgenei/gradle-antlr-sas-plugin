@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.Assert;
@@ -45,7 +45,7 @@ public class Ds2RegressionFunctionalTest {
         Files.writeString(projectDir.toPath().resolve("build.gradle"), """
                 plugins {
                     id 'java'
-                    id 'name.jurgenei.gradle.antlr.sas'
+                    id 'org.flowdigger.gradle.antlr.sas'
                 }
                 """, StandardCharsets.UTF_8);
 

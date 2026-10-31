@@ -1,7 +1,7 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
-import name.jurgenei.gradle.antlr.semantic.CaslLanguageModule;
-import name.jurgenei.gradle.antlr.semantic.SasLanguageModule;
+import org.flowdigger.gradle.antlr.semantic.CaslLanguageModule;
+import org.flowdigger.gradle.antlr.semantic.SasLanguageModule;
 import org.junit.Assert;
 import org.junit.Test;
 

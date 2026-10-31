@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr.semantic;
+package org.flowdigger.gradle.antlr.semantic;
 
 /**
  * Minimal semantic result contract shared by language modules.

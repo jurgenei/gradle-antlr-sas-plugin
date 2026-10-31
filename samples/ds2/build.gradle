@@ -1,22 +1,22 @@
 plugins {
     id 'java'
-    id 'name.jurgenei.gradle.antlr.sas'
+    id 'org.flowdigger.gradle.antlr.sas'
 }
 
-tasks.named('ds2XmlAst', name.jurgenei.gradle.antlr.XmlAstDs2GradleTask) {
+tasks.named('ds2XmlAst', org.flowdigger.gradle.antlr.XmlAstDs2GradleTask) {
     sourceDirectory.set(layout.projectDirectory.dir('src/main/ds2'))
     destinationDirectory.set(layout.buildDirectory.dir('output/ds2/xmlast'))
     targetExtension.set('.xml')
 }
 
-tasks.register('ds2XirAst', name.jurgenei.gradle.antlr.XmlAstDs2GradleTask) {
+tasks.register('ds2XirAst', org.flowdigger.gradle.antlr.XmlAstDs2GradleTask) {
     sourceDirectory.set(layout.projectDirectory.dir('src/main/ds2'))
     destinationDirectory.set(layout.buildDirectory.dir('output/ds2/xmlast'))
     targetExtension.set('.xir')
     xirFormat.set('beautified')
 }
 
-tasks.named('ds2Semantic', name.jurgenei.gradle.antlr.Ds2SemanticExtractGradleTask) {
+tasks.named('ds2Semantic', org.flowdigger.gradle.antlr.Ds2SemanticExtractGradleTask) {
     sourceDirectory.set(layout.projectDirectory.dir('src/main/ds2'))
     destinationDirectory.set(layout.buildDirectory.dir('output/ds2/semantic'))
 }

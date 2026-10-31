@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -45,8 +45,8 @@ public class SasGrammarPluginTest {
 
         final XmlAstSasGradleTask xmlTask = XmlAstSasGradleTask.class.cast(project.getTasks().getByName("sasXmlAst"));
         Assert.assertEquals("sas", xmlTask.getGrammar().get());
-        Assert.assertEquals("name.jurgenei.parsers.SasParser", xmlTask.getParserClassName().get());
-        Assert.assertEquals("name.jurgenei.parsers.SasLexer", xmlTask.getLexerClassName().get());
+        Assert.assertEquals("org.flowdigger.parsers.SasParser", xmlTask.getParserClassName().get());
+        Assert.assertEquals("org.flowdigger.parsers.SasLexer", xmlTask.getLexerClassName().get());
         Assert.assertEquals("program", xmlTask.getStartRule().get());
         Assert.assertEquals(".xml", xmlTask.getTargetExtension().get());
         Assert.assertEquals("compact", xmlTask.getXirFormat().get());

@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.api.Project;
 import org.gradle.api.Task;
@@ -35,8 +35,8 @@ public class CaslGrammarPluginTest {
 
         final XmlAstCaslGradleTask task = XmlAstCaslGradleTask.class.cast(project.getTasks().getByName("caslXmlAst"));
         Assert.assertEquals("casl", task.getGrammar().get());
-        Assert.assertEquals("name.jurgenei.parsers.CaslParser", task.getParserClassName().get());
-        Assert.assertEquals("name.jurgenei.parsers.CaslLexer", task.getLexerClassName().get());
+        Assert.assertEquals("org.flowdigger.parsers.CaslParser", task.getParserClassName().get());
+        Assert.assertEquals("org.flowdigger.parsers.CaslLexer", task.getLexerClassName().get());
         Assert.assertEquals("program", task.getStartRule().get());
         Assert.assertTrue(task.getIncludes().get().contains("**/*.casl"));
         Assert.assertEquals(".xml", task.getTargetExtension().get());

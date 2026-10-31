@@ -1,4 +1,4 @@
-package name.jurgenei.gradle.antlr;
+package org.flowdigger.gradle.antlr;
 
 import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
@@ -63,7 +63,7 @@ public class Ds2GrammarPluginFunctionalTest {
                 """
                 plugins {
                     id 'java'
-                    id 'name.jurgenei.gradle.antlr.sas'
+                    id 'org.flowdigger.gradle.antlr.sas'
                 }
                 """,
                 StandardCharsets.UTF_8);
