@@ -4,10 +4,10 @@ plugins {
     id 'java-gradle-plugin'
     id 'com.gradle.plugin-publish' version '2.1.1'
     id 'jacoco'
-    id 'name.jurgenei.gradle.antlr'
+    id 'org.flowdigger.gradle.antlr'
 }
 
-group = 'name.jurgenei.gradle'
+group = 'org.flowdigger.gradle'
 version = '0.1.3'
 
 gradlePlugin {
@@ -15,8 +15,8 @@ gradlePlugin {
         website = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
         vcsUrl = 'https://github.com/jurgenei/gradle-antlr-sas-plugin'
         sasGrammar {
-            id = 'name.jurgenei.gradle.antlr.sas'
-            implementationClass = 'name.jurgenei.gradle.antlr.SasGrammarPlugin'
+            id = 'org.flowdigger.gradle.antlr.sas'
+            implementationClass = 'org.flowdigger.gradle.antlr.SasGrammarPlugin'
             displayName = 'Gradle ANTLR SAS Plugin'
             description = 'Proof-of-concept SAS macro expansion and XML AST generation plugin.'
             tags.set(['antlr', 'sas', 'xml', 'ast', 'macro'])
@@ -38,7 +38,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'name.jurgenei.gradle:gradle-antlr-plugin:0.1.7'
+    implementation 'org.flowdigger.gradle:gradle-antlr-plugin:0.1.7'
     implementation 'org.antlr:antlr4-runtime:4.13.2'
 
     antlr 'org.antlr:antlr4:4.13.2'
