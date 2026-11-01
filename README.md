@@ -2,7 +2,7 @@
 
 ![Conformance](https://img.shields.io/badge/Conformance-Check--All%20Passing-brightgreen)
 
-[![Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/name.jurgenei.gradle.antlr.sas?label=Plugin%20Portal)](https://plugins.gradle.org/plugin/name.jurgenei.gradle.antlr.sas)
+[![Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/org.flowdigger.gradle.antlr.sas?label=Plugin%20Portal)](https://plugins.gradle.org/plugin/org.flowdigger.gradle.antlr.sas)
 [![Build and Test](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml)
 [![JUnit Report](https://img.shields.io/badge/JUnit-Report-blue?logo=githubactions)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/gradle-build.yml)
 [![Coverage CI](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml/badge.svg)](https://github.com/jurgenei/gradle-antlr-sas-plugin/actions/workflows/coverage.yml)
@@ -18,7 +18,7 @@
 
 `gradle-antlr-sas-plugin` exposes one plugin id:
 
-- `name.jurgenei.gradle.antlr.sas`
+- `org.flowdigger.gradle.antlr.sas`
 
 One plugin registers three pipelines:
 
@@ -37,7 +37,7 @@ One plugin registers three pipelines:
 ```groovy
 plugins {
     id 'java'
-    id 'name.jurgenei.gradle.antlr.sas'
+    id 'org.flowdigger.gradle.antlr.sas'
 }
 ```
 
@@ -56,7 +56,7 @@ plugins {
 XML AST tasks support S-expression output too (`sasXmlAst`, `caslXmlAst`, `ds2XmlAst`):
 
 ```groovy
-tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
+tasks.named('sasXmlAst', org.flowdigger.gradle.antlr.XmlAstSasGradleTask) {
     targetExtension.set('.xir')
     xirFormat.set('beautified')
 }
