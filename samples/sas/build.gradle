@@ -1,23 +1,23 @@
 plugins {
     id 'java'
-    id 'name.jurgenei.gradle.antlr.sas'
+    id 'org.flowdigger.gradle.antlr.sas'
 }
 
-tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask) {
+tasks.named('sasMacro', org.flowdigger.gradle.antlr.SasMacroGradleTask) {
     sourceDirectory.set(layout.projectDirectory.dir('src/main/sas'))
     destinationDirectory.set(layout.buildDirectory.dir('output/sas/macro'))
     predefinedMacros.put('TARGET', 'work.sales')
 }
 
-tasks.named('sasXmlAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-    sourceDirectory.set(tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask)
+tasks.named('sasXmlAst', org.flowdigger.gradle.antlr.XmlAstSasGradleTask) {
+    sourceDirectory.set(tasks.named('sasMacro', org.flowdigger.gradle.antlr.SasMacroGradleTask)
             .flatMap { it.destinationDirectory })
     destinationDirectory.set(layout.buildDirectory.dir('output/sas/xmlast'))
     targetExtension.set('.xml')
 }
 
-tasks.register('sasXirAst', name.jurgenei.gradle.antlr.XmlAstSasGradleTask) {
-    sourceDirectory.set(tasks.named('sasMacro', name.jurgenei.gradle.antlr.SasMacroGradleTask)
+tasks.register('sasXirAst', org.flowdigger.gradle.antlr.XmlAstSasGradleTask) {
+    sourceDirectory.set(tasks.named('sasMacro', org.flowdigger.gradle.antlr.SasMacroGradleTask)
             .flatMap { it.destinationDirectory })
     destinationDirectory.set(layout.buildDirectory.dir('output/sas/xmlast'))
     targetExtension.set('.xir')
